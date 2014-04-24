@@ -23,7 +23,9 @@
     "gulp-uglify": "0.2.1",
     "tiny-lr": "0.0.5",
     "liveify": "^0.4.0",
-    "gulp-browserify": "^0.5.0"
+    "gulp-browserify": "^0.5.0",
+    "gulp": "^3.6.2",
+    "gulp-jade": "^0.5.0"
   },
   "devDependencies": {
     "connect-livereload": "^0.4.0",
