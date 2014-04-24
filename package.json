@@ -25,7 +25,9 @@
     "liveify": "^0.4.0",
     "gulp-browserify": "^0.5.0",
     "gulp": "^3.6.2",
-    "gulp-jade": "^0.5.0"
+    "gulp-jade": "^0.5.0",
+    "css-parse": "^1.7.0",
+    "express": "^4.0.0"
   },
   "devDependencies": {
     "connect-livereload": "^0.4.0",
