@@ -1,0 +1,34 @@
+{
+  "name": "login-form",
+  "version": "0.0.0",
+  "description": "An example of BEM applied to a form",
+  "repository": "",
+  "author": "Vittorio Zaccaria",
+  "license": "BSD",
+  "dependencies": {
+    "LiveScript": "1.2.0",
+    "browserify": "2.36.1",
+    "connect-livereload": "0.4.0",
+    "gulp-changed": "^0.3.0",
+    "gulp-clean": "0.2.4",
+    "gulp-concat": "2.2.0",
+    "gulp-exec": "1.0.4",
+    "gulp-filesize": "0.0.6",
+    "gulp-ftp": "0.2.1",
+    "gulp-less": "1.2.3",
+    "gulp-livescript": "0.2.1",
+    "gulp-rename": "1.2.0",
+    "gulp-spawn": "0.3.0",
+    "gulp-stylus": "0.2.1",
+    "gulp-uglify": "0.2.1",
+    "tiny-lr": "0.0.5",
+    "liveify": "^0.4.0",
+    "gulp-browserify": "^0.5.0"
+  },
+  "devDependencies": {
+    "connect-livereload": "^0.4.0",
+    "tiny-lr": "0.0.5",
+    "run-sequence": "^0.3.6",
+    "gulp-plumber": "^0.6.1"
+  }
+}

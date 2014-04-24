@@ -1,0 +1,120 @@
+@import url("http://fonts.googleapis.com/css?family=Lato:400,700,900,400italic");
+
+@import "../../bower_components/less-elements.less";
+
+*:focus {
+    outline: 0;
+}
+
+@blue: #009DEC;
+@green: #3EAB3F;
+
+.form__element-common-properties() {
+	box-sizing: border-box;
+	-moz-box-sizing: border-box;
+	margin-top: .3em;
+	font-family: Lato, Helvetica;
+	display: block;
+	width: 100%;
+	font-size: 1.3em;
+}
+
+
+
+.form {
+	width: 40%;
+	width: 20em;
+	box-sizing: border-box;
+	.rounded(3px);
+	background-color: white;
+	.drop-shadow(@blur: 10px, @alpha: 0.3);
+	-dyn-webkit-transform:   '"translate( 0px , #{-1*@w-scrollTop}px) "';
+	-dyn-margin-top: 		 '(@w-height - @i-height)/2.0';
+	-dyn-margin-left: 		 '(@w-width -  @i-width)/2.0';
+	-dyn-opacity: 	 		 '@easeOut({when: @w-scrollTop, isHigherThan: 350})';
+	padding: 2em;
+}
+
+.form__field-common-properties() {
+	font-size: 2em;
+	border:1px solid #cccccc;
+	.rounded(3px);
+	padding: .3em;
+	&:focus {
+		border-left: 5px solid @blue;
+	}
+}
+
+.form__button-common-properties(@color) {
+	&:hover {
+		background: darken(@color, 5%)
+	}
+}
+
+.form__username {
+	.form__element-common-properties;
+	.form__field-common-properties;
+}
+
+.form__password {
+	.form__element-common-properties;
+	.form__field-common-properties;
+}
+
+.form__button-go {
+	.form__element-common-properties;
+	.form__button-common-properties(@blue);
+	padding: 1em;
+	text-align: center;
+	background: @blue;
+	border-radius: 3px;
+	color: white;
+}
+
+.form__button-register {
+	.form__element-common-properties;
+	.form__button-common-properties(@green);
+	padding: 1em;
+	text-align: center;
+	border-radius: 3px;
+	background: @green;
+	color: white;
+}
+
+.call-to-action {
+	position: absolute;
+	-dyn-top: '@w-height';
+	background-color: white;
+	width: 100%;
+	margin-left: 0;
+	margin-right: 0;
+
+}
+
+.call-to-action__header {
+	width: 40%;
+	text-align: center;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 1em;
+	font-size: 2em;
+	font-family: Lato, Helvetica;
+}
+
+body {
+	-dyn-height:  '@w-height';
+	background: url(../img/background.jpg) no-repeat center center;
+    background-size: cover;
+    margin: 0px;
+}
+
+.overlay {
+  opacity:    0.5; 
+  background: #000; 
+  width:      100%;
+  height:     100%; 
+  z-index:    -1;
+  top:        0; 
+  left:       0; 
+  position:   fixed; 
+}

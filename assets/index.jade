@@ -1,0 +1,27 @@
+doctype html
+html
+	head(lang="en")
+		title A simple login 
+		meta(http-equiv="content-type", content="text/html, charset=UTF-8")
+		meta(name="description", content="")
+		meta(name="keywords", content="")
+		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
+		// if lt IE 9
+			script(type="text/javascript", src="js/html5shiv.js")
+		link(rel="stylesheet", href="css/client.css", type="text/css")
+	body
+		.overlay
+		.form
+			input.form__username(name="username")
+			input.form__password(name="password", type="password")
+			a.form__button-go go 
+			a.form__button-register register
+
+		.call-to-action
+			.call-to-action__header So.. 
+			.call-to-action__text what are you waiting?
+
+		script(type="text/javascript", src="js/vendor.js")
+		script(type="text/javascript", src="js/client.js")
+		// if IE
+			script(type="text/javascript", src="js/placeholder.js")
