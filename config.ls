@@ -4,7 +4,7 @@ _module = ->
     iface = { 
 
       # main properties 
-      destination:'_site'
+      destination:'dist'
       remote:'simple-login'
 
       vendor-js:
