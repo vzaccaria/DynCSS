@@ -33,16 +33,27 @@ easeIn = (context) ->
         v = sat((is-lower-than - wn)/is-lower-than)
         return v
 
+selectFrom = (values) ->
+    dt = window.dynCss.data
+    if dt.variable?
+        nm = dt.variable.replace /@w-(\w+)/g, '$1'
+        vv = window.dynCss.lib.wRef[nm]()
+        for b,i in dt.breakpoints 
+            if vv < b 
+                return values[i]
+        return values[values.length - 1]
+    else 
+        return void
+
+
 _module = ->
 
           
     iface = {
         easeOut     : easeOut
         easeIn      : easeIn
-        translate   : translate
-        translate3d : translate3d
         perspective : perspective
-
+        selectFrom: selectFrom
     }
   
     return iface

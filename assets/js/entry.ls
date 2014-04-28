@@ -4,35 +4,26 @@ css-parse = require('css-parse')
 window.dynCss = {}
 window.dynCss.lib = require('./lib')
 
+window.dynCss.data = {}
+window.dynCss.data.breakpoints = []
+window.dynCss.data.variable = void
+
+window.dynCss.api = {
+    set-breakpoints: (list, variable) ->
+        window.dynCss.data.breakpoints = list 
+        window.dynCss.data.variable = variable 
+}
+
+require('./sta')
+
+camelize = (str) ->
+      ex = /[-_\s]+(.)?/g
+      return str.replace ex, (m, c) ->
+            | c? => c.toUpperCase()
+            | otherwise => ""
+
 
 scroll-handlers = {}
-sheets          = []
-
-allow-element-selectors = true 
-
-# From http://davidwalsh.name/add-rules-stylesheets
-
-create-sheet = ->
-    style = document.createElement "style" 
-    style.setAttribute "media", "screen" 
-    style.appendChild document.createTextNode ""  
-    document.head.appendChild style 
-    return style.sheet
-
-get-css-rules = (sheet) ->
-    if sheet.rules?
-        return sheet.rules 
-    else    
-        return sheet.cssRules
-
-add-css-rule = (sheet, selector, rules, index) ->
-    if sheet.insert-rule?
-        sheet.insert-rule "#selector { #rules }", index
-    else 
-        sheet.add-rule selector, rules, index
-
-    index = get-css-rules(sheet).length - 1
-    return { ref: get-css-rules(sheet)[index].style, index: index }
 
 get-scroll-expression = (d) ->
     if (results = d.property is /\-dyn\-(.*)/)?
@@ -46,6 +37,7 @@ create-function = (body) ->
     body   = body.replace(/\#{(.+)}/g, '"+($1)+"')
     body   = body.replace(/\#(\w+)/g, '"+($1)+"')
     body   = body.replace(/@i-(\w+)/g,'parseInt(this.el.css(\'$1\'))')
+    body   = body.replace(/@j-(\w+)/g,'jQuery(this.el).$1()')
     body   = body.replace(/@w-(\w+)/g,'(this.lib.wRef.$1())')
     body   = body.replace(/@/g,'this.lib.')
     
@@ -63,48 +55,105 @@ update-scope = ->
 
 refresh-handler = undefined
 
-build-handlers = (rules, sheet) ->
+build-handlers = (rules) ->
   for rule in rules 
     if rule.type is "rule"
         sel = rule.selectors
+
+        actions = []
 
         for decl in rule.declarations 
             result = get-scroll-expression(decl)
 
             if result?
+
                 { property, expression, trigger} = result 
-                { ref, index } = add-css-rule sheet, sel, ""
                 handler = create-function expression
 
-                wrapper = (next) ->
-                    wRef = $(window)
-                    let i = index, fun = handler, pro = _.str.camelize(property), s = sel
-                        (e) -> 
-                            update-scope()
+                # let fun = handler, pro = camelize(property), s = sel
+                actions.push { property: camelize(property), funct: handler, sel: sel }
 
-                            for sct in s 
-                                $(sct).each (i) ->
-                                    window.dynCss.el = $(this)
-                                    val = fun()
-                                    $(this).css(pro, val)
+        wrapper = (next) ->
+            let act = actions
+                (e) -> 
+                    update-scope()
+                    css = {}
+                    for a in act 
+                        css[a.property] = a.funct()
 
-                            next(e) if next?
+                    for sct in a.sel
+                        $(sct).each (i) ->
+                            window.dynCss.el = $(this)
+                            # console.log css
+                            $(this).css(css)
 
-                refresh-handler := wrapper(refresh-handler)                
+                    next(e) if next?
 
- 
+        if actions.length != 0
+            refresh-handler := wrapper(refresh-handler)                
 
+
+decimate = 1
+iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
+
+
+counter = 0
+lt = 0
+
+fixed-ttc = (1000/1)
+
+install-custom-raf = ->
+    window.customRAF = (cb) ->
+        ct = new Date().getTime()
+        ttc = Math.max(0, 16 - (ct - lt))
+        if fixed-ttc? 
+            set-timeout cb, fixed-ttc, true
+        else 
+            set-timeout cb, ttc, true
+
+        lt := ct + ttc
+
+install-custom-raf-handler = ->
+    install-custom-raf()
+    wrapped-handler = ->
+        customRAF wrapped-handler 
+        refresh-handler()
+
+    customRAF(wrapped-handler)
+    refresh-handler()
+
+install-raf-handler = ->
+            wrapped-handler = ->
+                request-animation-frame wrapped-handler 
+                refresh-handler()
+
+            request-animation-frame(wrapped-handler)
+
+install-scroll-handler = ->
+            scroll-handler = ->
+                if (counter % decimate) == 0
+                    refresh-handler()
+                counter := counter + 1
+
+            window.onscroll     = scroll-handler
+            window.onresize     = scroll-handler
+            window.ontouchmove  = scroll-handler
+            scroll-handler()
 
 $('link[type="text/css"]').each (i,n) ->
     if n.href?
         $.get n.href, ->
-            sheet = create-sheet()
-            sheets.push(sheet)
             rules = css-parse(it).stylesheet.rules
-            build-handlers(rules, sheet)
-            window.onscroll = refresh-handler
-            window.onresize = refresh-handler 
-            refresh-handler()
+            build-handlers(rules)
+            if iOS
+                install-custom-raf-handler()
+            else 
+                install-scroll-handler()
+            
+
+            # window.onscroll = refresh-handler
+            # window.onresize = refresh-handler 
+            # refresh-handler()
 
 
 
