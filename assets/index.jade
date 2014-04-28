@@ -8,20 +8,81 @@ html
 		meta(name="viewport", content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0")
 		// if lt IE 9
 			script(type="text/javascript", src="js/html5shiv.js")
+		link(href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css", rel="stylesheet")
+		link(rel="stylesheet", type="text/css", href="//highlightjs.org/static/styles/obsidian.css")
 		link(rel="stylesheet", href="css/client.css", type="text/css")
 	body
+		//- BEM Rules.
 		.overlay
-		.form
-			input.form__username(name="username")
-			input.form__password(name="password", type="password")
-			a.form__button-go go 
-			a.form__button-register register
+		.header
+			.header__title
+				strong Dyn
+				|CSS
+			.header__sub-title Simple dynamic CSS rules to give life to your sites.
 
-		.call-to-action
-			.call-to-action__header So.. 
-			.call-to-action__text what are you waiting?
+			.header__buttons
+				a.header__button Download
+				a.header__button Star
+				a.header__button Docs
+
+		.sub-header 
+			.sub-header__actions 
+			
+				.sub-header__action 
+					i.sub-header__action__icon.fa.fa-cloud-download
+					.sub-header__action__text Install
+					.sub-header__action__desc
+						:markdown
+							```shell
+							$ bower install DynCSS
+							```
+
+				.sub-header__action 
+					i.sub-header__action__icon.fa.fa-html5
+					.sub-header__action__text Include
+					.sub-header__action__desc
+						:markdown
+							```html
+							...
+							<script src='...dyncss.min.js'
+															type='text/javascript' />
+							...
+							```
+
+
+				.sub-header__action
+					i.sub-header__action__icon.fa.fa-gamepad
+					.sub-header__action__text Enjoy
+					.sub-header__action__desc
+						:markdown
+							```css
+							i.fa.fa-gamepad {
+									-dyn-webkit-transform:   
+												'"rotate(\#{@w-scrollTop}deg) "';
+							}
+							```
+
+		hr.separator
+
+		.container 
+			.container__short_desc
+
+			.container__examples
+
+			.container__api
+				x
+
+		.footer 
 
 		script(type="text/javascript", src="js/vendor.js")
 		script(type="text/javascript", src="js/client.js")
+
+		script.
+			window.dynCss.api.setBreakpoints([481,961],'@w-width');
+
+		script(src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js')
+		script.
+			hljs.initHighlightingOnLoad();                                      
+   
 		// if IE
 			script(type="text/javascript", src="js/placeholder.js")

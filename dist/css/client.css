@@ -1,0 +1,117 @@
+@import url(http://fonts.googleapis.com/css?family=Lato:100,300,400,700,900);
+@import url(http://fonts.googleapis.com/css?family=Inconsolata);
+/*---------------------------------------------------
+    LESS Elements 0.9
+  ---------------------------------------------------
+    A set of useful LESS mixins
+    More info at: http://lesselements.com
+  ---------------------------------------------------*/
+*:focus {
+  outline: 0;
+}
+body {
+  font-family: Lato, Helvetica;
+  color: white;
+}
+.header {
+  width: 70%;
+  -dyn-webkit-transform: '"translate( 0px , #{-1*@w-scrollTop}px) "';
+  -dyn-margin-top: '(@w-height - @i-height)/2.0';
+  -dyn-margin-left: '(@w-width -  @i-width)/2.0';
+  -dyn-opacity: '@easeOut({when: @w-scrollTop, isHigherThan: @w-height/4})';
+}
+.header__title {
+  -dyn-font-size: '@selectFrom(["3em", "4em", "5em"])';
+  font-size: 5em;
+  font-weight: 100;
+  padding-bottom: .3em;
+}
+.header__sub-title {
+  -dyn-font-size: '@selectFrom(["1em", "1.5em", "2em"])';
+  font-size: 2em;
+  -dyn-font-weight: '@selectFrom(["300", "100", "100"])';
+  padding-bottom: 1.5em;
+}
+.header__buttons {
+  font-size: 1em;
+  font-weight: 300;
+}
+.header__button {
+  -dyn-font-size: '@selectFrom(["1em", "1.5em", "1.5em"])';
+  -dyn-display: '@selectFrom(["block", "block", "inline"])';
+  -dyn-margin-top: '@selectFrom(["1em" , "1em" , "0em"])';
+  margin-right: 30px;
+  padding: 10px 30px 10px 30px;
+  border: solid 1px white;
+  color: white;
+  font-size: 1.5em;
+}
+.sub-header {
+  position: absolute;
+  -dyn-top: '(@w-height)';
+  background: white;
+  width: 100%;
+}
+.sub-header__actions {
+  padding-top: 5em;
+  color: #191919;
+  -dyn-width: '@selectFrom(["100%", "85%", "70%"])';
+  margin-left: auto;
+  margin-right: auto;
+}
+.sub-header__action {
+  box-sizing: border-box;
+  -dyn-width: '@selectFrom(["100%", "100%", "30%"])';
+  -dyn-margin-left: '@selectFrom(["0px" , "0px" , "15px"])';
+  -dyn-margin-right: '@selectFrom(["0px" , "0px" , "15px"])';
+  -dyn-margin-top: '@selectFrom(["5em" , "1em" , "0em"])';
+  display: block;
+  text-align: center;
+  float: left;
+}
+.sub-header__action__icon {
+  font-size: 8em;
+}
+.sub-header__action__icon.fa.fa-gamepad {
+  -dyn-webkit-transform: '"rotate(#{@w-scrollTop}deg) "';
+}
+.sub-header__action__text {
+  font-size: 2.5em;
+}
+.sub-header__action__desc pre {
+  -dyn-padding: '@selectFrom(["0" , "2em" , "2em"])';
+  text-align: left;
+  white-space: pre-wrap;
+  -webkit-border-top-right-radius: 5px;
+  -webkit-border-bottom-right-radius: 5px;
+  -webkit-border-bottom-left-radius: 5px;
+  -webkit-border-top-left-radius: 5px;
+  -moz-border-radius-topright: 5px;
+  -moz-border-radius-bottomright: 5px;
+  -moz-border-radius-bottomleft: 5px;
+  -moz-border-radius-topleft: 5px;
+  border-top-right-radius: 5px;
+  border-bottom-right-radius: 5px;
+  border-bottom-left-radius: 5px;
+  border-top-left-radius: 5px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+  -dyn-margin-left: '@selectFrom(["0%" , "0%" , "1%"])';
+  -dyn-margin-right: '@selectFrom(["0%" , "0%" , "1%"])';
+}
+.sub-header__action__desc code {
+  font-family: Inconsolata;
+}
+body {
+  -dyn-height: '@w-height';
+  background: url(../img/silhouette_dune_desktop.jpg) no-repeat center center;
+  background-size: cover;
+  margin: 0px;
+}
+.container {
+  margin-top: 100px;
+  width: 100px;
+  height: 500px;
+  background-color: red;
+}
