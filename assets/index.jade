@@ -62,15 +62,88 @@ html
 							}
 							```
 
-		hr.separator
+			.sub-header__container
+				hr.sub-header__container__separator 
 
-		.container 
-			.container__short_desc
+				.sub-header__container__short_desc
+					:markdown
+						# What is it? 
 
-			.container__examples
+						DynCSS can parse your CSS for additional `-dyn-` rules. These 
+						rules are evaluated on browser's events like `scroll` and 
+						`resize` and applied to the CSS attribute you have specified.
 
-			.container__api
-				x
+						Rules can be defined by referring to important properties of the 
+						document that are evaluated dynamically. For example, this will 
+						center vertically `.header`, dynamically changing the position as 
+						the window is resized:
+
+						```css 
+						.header {
+							-dyn-margin-top: 		 '(@w-height - @i-height)/2.0';
+						}
+						```
+
+						Here, `@w-height` is the dynamic height of the window and 
+						`@i-height` is the dynamic height of the current element (`.header` in this case). The 
+						header of this page has been centered in this way. 
+
+						You can even create parallax effects by using the window's `scrollTop` and dynamically
+						apply a CSS 3d transform:
+
+						```css 
+						.header {
+							-dyn-webkit-transform:   '"translate( 0px , \#{-1*@w-scrollTop}px) "';
+						}	
+						``` 
+
+						Since the transform value is a string, we should dynamically create one with 
+						the specific value of vertical displacement, by interpolating it with `\#{..}`. 
+
+				.sub-header__container__short_desc
+					:markdown
+
+						# Features 
+
+						You can transform any CSS property — provided that it is writable
+						by jQuery's `.css()` method — by appending the `-dyn-` prefix and specifying
+						a quoted javascript expression.
+
+						You can use placeholders to access the dynamic info of the document;
+						here's a list of built-in placeholders you can use: 
+
+						| Prefixes | Description |
+						|---|---|
+						| `@w-foo` |  dynamically evaluates `window.foo()`|
+						| `@i-foo` |  dynamically evaluates `$(current-selector).css(foo)` |
+						| `@j-foo` |  dynamically evaluates `$(current-selector).foo()` |
+						
+						The syntax for the rules should be relatively painless even if you use CSS preprocessors.
+						I am even using it in a `.less` file that compiles without any complaints.
+
+						## Library of functions
+						If you need to introduce custom functions to be evaluated at run-time, you 
+						can add them to `window.dynCss.lib`. For example, here's how you can introduce 
+						a center function that returns the centers of the current window:
+
+						```
+						window.dynCss.lib.center = function() {
+							return {x: window.width()/2, y: window.height()/2 };
+						}
+						```
+
+						To use it in a rule, invoke it with the `@` prefix:
+
+						```
+							-dyn-margin-left: '@center().x';
+						```
+
+
+
+				.sub-header__container__examples
+
+				.sub-header__container__api
+				
 
 		.footer 
 

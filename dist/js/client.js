@@ -42,14 +42,16 @@
   };
   createFunction = function(body){
     var script;
+    body = body.replace(/@a-(\w+){(.+)}/g, 'jQuery(\'$2\').$1()');
+    body = body.replace(/@p-(\w+){(.+)}/g, 'jQuery(\'$2\').position().$1');
     body = body.replace(/\#{(.+)}/g, '"+($1)+"');
     body = body.replace(/\#(\w+)/g, '"+($1)+"');
     body = body.replace(/@i-(\w+)/g, 'parseInt(this.el.css(\'$1\'))');
     body = body.replace(/@j-(\w+)/g, 'jQuery(this.el).$1()');
     body = body.replace(/@w-(\w+)/g, '(this.lib.wRef.$1())');
     body = body.replace(/@/g, 'this.lib.');
-    script = document.createElement("script");
     console.log(body);
+    script = document.createElement("script");
     script.text = "window.tmp = function() { return (" + body + "); }.bind(window.dynCss);";
     document.head.appendChild(script).parentNode.removeChild(script);
     return window.tmp;
@@ -87,16 +89,11 @@
     }
     return results$;
     function fn$(next){
-      return (function(act){
+      return (function(act, scopedSel){
         return function(e){
-          var css, i$, ref$, len$, a, sct;
+          var i$, ref$, len$, sct;
           updateScope();
-          css = {};
-          for (i$ = 0, len$ = (ref$ = act).length; i$ < len$; ++i$) {
-            a = ref$[i$];
-            css[a.property] = a.funct();
-          }
-          for (i$ = 0, len$ = (ref$ = a.sel).length; i$ < len$; ++i$) {
+          for (i$ = 0, len$ = (ref$ = scopedSel).length; i$ < len$; ++i$) {
             sct = ref$[i$];
             $(sct).each(fn$);
           }
@@ -104,11 +101,17 @@
             return next(e);
           }
           function fn$(i){
+            var css, i$, ref$, len$, a;
             window.dynCss.el = $(this);
+            css = {};
+            for (i$ = 0, len$ = (ref$ = act).length; i$ < len$; ++i$) {
+              a = ref$[i$];
+              css[a.property] = a.funct();
+            }
             return $(this).css(css);
           }
         };
-      }.call(this, actions));
+      }.call(this, actions, sel));
     }
   };
   decimate = 1;
@@ -178,14 +181,7 @@
 
 },{"./lib":2,"./sta":3,"css-parse":4}],2:[function(require,module,exports){
 (function(){
-  var translate, translate3d, perspective, sat, easeOut, easeIn, selectFrom, _module;
-  translate = function(vy, vx){
-    vx == null && (vx = 0);
-    return "translate(" + vx + "px," + vy + "px) ";
-  };
-  translate3d = function(vx, vy, vz){
-    return "translate3d(" + vx + "px," + vy + "px," + vz + "px) ";
-  };
+  var perspective, sat, easeOut, easeIn, selectFrom, _module;
   perspective = function(px){
     return "perspective(" + px + "px) ";
   };
@@ -245,7 +241,16 @@
       easeOut: easeOut,
       easeIn: easeIn,
       perspective: perspective,
-      selectFrom: selectFrom
+      selectFrom: selectFrom,
+      onVerticalTarget: function(){
+        var v;
+        v = easeIn({
+          when: $(window).scrollTop(),
+          isHigherThan: jQuery(window.dynCss.el).position().top
+        });
+        console.log(v);
+        return v;
+      }
     };
     return iface;
   };

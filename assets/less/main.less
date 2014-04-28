@@ -13,6 +13,17 @@ body {
 	color: white;
 }
 
+code {
+	font-family: Inconsolata;
+}
+
+// 	    __                   __         
+// 	   / /_  ___  ____ _____/ /__  _____
+// 	  / __ \/ _ \/ __ `/ __  / _ \/ ___/
+// 	 / / / /  __/ /_/ / /_/ /  __/ /    
+// 	/_/ /_/\___/\__,_/\__,_/\___/_/     
+// 	                                    
+
 .header {
 	width: 70%;
 	-dyn-webkit-transform:   '"translate( 0px , #{-1*@w-scrollTop}px) "';
@@ -51,24 +62,42 @@ body {
 	font-size: 1.5em;
 }
 
+// 	               __          __                   __         
+// 	   _______  __/ /_        / /_  ___  ____ _____/ /__  _____
+// 	  / ___/ / / / __ \______/ __ \/ _ \/ __ `/ __  / _ \/ ___/
+// 	 (__  ) /_/ / /_/ /_____/ / / /  __/ /_/ / /_/ /  __/ /    
+// 	/____/\__,_/_.___/     /_/ /_/\___/\__,_/\__,_/\___/_/     
+// 	                                                           
+
 .sub-header {
 	position: absolute;
 	-dyn-top: '(@w-height)';
 	background: white;
 	width: 100%;
+	box-sizing: border-box;
+
 }
 
+
+// Subheader	  __  _                 
+// 	  ____ ______/ /_(_)___  ____  _____
+// 	 / __ `/ ___/ __/ / __ \/ __ \/ ___/
+// 	/ /_/ / /__/ /_/ / /_/ / / / (__  ) 
+// 	\__,_/\___/\__/_/\____/_/ /_/____/  
+// 	                                    
+
 .sub-header__actions {
+	display: inline-block;
+	box-sizing: border-box;
 	padding-top: 5em;
 	color: darken(white, 90%);
-	-dyn-width: 		'@selectFrom(["100%", "85%", "70%"])';
-	margin-left: auto;
-	margin-right: auto;
+	-dyn-width: 		'@selectFrom(["100%", "80%", "70%"])';
+	-dyn-margin-left: 	'@selectFrom(["0" , "10%" , "15%"])';
+	-dyn-margin-right: 	'@selectFrom(["0" , "10%" , "15%"])';
 }
 
 .sub-header__action {
 	box-sizing: border-box;
-
 	-dyn-width: 		'@selectFrom(["100%", "100%", "30%"])';
 	-dyn-margin-left: 	'@selectFrom(["0px" , "0px" , "15px"])';
 	-dyn-margin-right: 	'@selectFrom(["0px" , "0px" , "15px"])';
@@ -106,16 +135,73 @@ body {
 	-dyn-padding: 		'@selectFrom(["0" , "2em" , "2em"])';
 	text-align: left;
 	white-space:pre-wrap;
-	.border-radius(5px,5px,5px,5px);
 	-dyn-margin-left: 	'@selectFrom(["0%" , "0%" , "1%"])';
 	-dyn-margin-right: 	'@selectFrom(["0%" , "0%" , "1%"])';
 
 }
 
+
 .sub-header__action__desc code {
+	.border-radius(5px,5px,5px,5px);
 	font-family: Inconsolata;
 
 }
+
+// Subheader
+// 	   ______            __        _                
+// 	  / ____/___  ____  / /_____ _(_)___  ___  _____
+// 	 / /   / __ \/ __ \/ __/ __ `/ / __ \/ _ \/ ___/
+// 	/ /___/ /_/ / / / / /_/ /_/ / / / / /  __/ /    
+// 	\____/\____/_/ /_/\__/\__,_/_/_/ /_/\___/_/     
+// 	                                                
+
+
+.sub-header__container {
+	padding-top: 8em;
+	display: block;
+	color: black;
+}
+
+hr.sub-header__container__separator {
+	width: 40%;
+}
+
+.sub-header__container__short_desc {
+	padding: 1em;
+	line-height: 1.5em;
+	font-size: 1.2em;
+	-dyn-width: 		'@selectFrom(["90%", "80%", "40%"])';
+	margin-left: auto;
+	margin-right: auto;
+
+	-dyn-opacity: 			'@easeIn({when: @w-scrollTop, isHigherThan: @j-position.top})';
+	-dyn-webkit-transform:   '"translate( #{(1-@onVerticalTarget()) * 300.0}px, 0px )"';
+
+	& > p > code {
+		background-color: darken(white, 5%);
+		padding: 3px;
+		.border-radius(6px,6px,6px,6px);
+	}
+
+	& > table {
+		width: 100%;
+		background-color: darken(white, 5%);
+		padding: 2em;
+		& th {
+			min-width: 15%;
+			text-align: left;
+		}
+		.border-radius(6px,6px,6px,6px);
+	}
+}
+
+
+// 	    __              __     
+// 	   / /_  ____  ____/ /_  __
+// 	  / __ \/ __ \/ __  / / / /
+// 	 / /_/ / /_/ / /_/ / /_/ / 
+// 	/_.___/\____/\__,_/\__, /  
+// 	                  /____/   
 
 body {
 	-dyn-height:  '@w-height';
@@ -123,11 +209,3 @@ body {
     background-size: cover;
     margin: 0px;
 }
-
-.container {
-	margin-top: 100px;
-	width: 100px;
-	height: 500px;
-	background-color: red;
-}
-

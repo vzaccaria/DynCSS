@@ -34,15 +34,17 @@ get-scroll-expression = (d) ->
 
 create-function = (body) ->
 
+    body   = body.replace(/@a-(\w+){(.+)}/g, 'jQuery(\'$2\').$1()')
+    body   = body.replace(/@p-(\w+){(.+)}/g, 'jQuery(\'$2\').position().$1')
     body   = body.replace(/\#{(.+)}/g, '"+($1)+"')
     body   = body.replace(/\#(\w+)/g, '"+($1)+"')
     body   = body.replace(/@i-(\w+)/g,'parseInt(this.el.css(\'$1\'))')
     body   = body.replace(/@j-(\w+)/g,'jQuery(this.el).$1()')
     body   = body.replace(/@w-(\w+)/g,'(this.lib.wRef.$1())')
     body   = body.replace(/@/g,'this.lib.')
-    
+   
+    console.log body 
     script = document.createElement("script")
-    console.log body
     script.text = "window.tmp = function() { return (#body); }.bind(window.dynCss);"
     document.head.appendChild( script ).parentNode.removeChild( script );
     return window.tmp
@@ -74,17 +76,16 @@ build-handlers = (rules) ->
                 actions.push { property: camelize(property), funct: handler, sel: sel }
 
         wrapper = (next) ->
-            let act = actions
+            let act = actions, scoped-sel=sel
                 (e) -> 
                     update-scope()
-                    css = {}
-                    for a in act 
-                        css[a.property] = a.funct()
 
-                    for sct in a.sel
+                    for sct in scoped-sel
                         $(sct).each (i) ->
                             window.dynCss.el = $(this)
-                            # console.log css
+                            css = {} 
+                            for a in act 
+                                css[a.property] = a.funct()
                             $(this).css(css)
 
                     next(e) if next?

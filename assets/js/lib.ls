@@ -1,9 +1,3 @@
-translate = (vy, vx = 0) ->
-    "translate(#{vx}px,#{vy}px) "
-
-translate3d = (vx, vy, vz) ->
-    "translate3d(#{vx}px,#{vy}px,#{vz}px) "
-
 perspective = (px) ->
     return "perspective(#{px}px) "
 
@@ -54,6 +48,11 @@ _module = ->
         easeIn      : easeIn
         perspective : perspective
         selectFrom: selectFrom
+
+        onVerticalTarget: ->
+            v = easeIn({when: $(window).scrollTop(), isHigherThan: jQuery(window.dynCss.el).position().top})
+            console.log v
+            return v
     }
   
     return iface

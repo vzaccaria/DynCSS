@@ -10,6 +10,68 @@
      &#39;&quot;rotate(#{@w-scrollTop}deg) &quot;&#39;;
 }
 </code></pre>
-</div></div></div></div><hr class="separator"><div class="container"><div class="container__short_desc"></div><div class="container__examples"></div><div class="container__api"><x></x></div></div><div class="footer"></div><script type="text/javascript" src="js/vendor.js"></script><script type="text/javascript" src="js/client.js"></script><script>window.dynCss.api.setBreakpoints([481,961],'@w-width');
+</div></div></div><div class="sub-header__container"><hr class="sub-header__container__separator"><div class="sub-header__container__short_desc"><h1 id="what-is-it-">What is it?</h1>
+<p>DynCSS can parse your CSS for additional <code>-dyn-</code> rules. These 
+rules are evaluated on browser&#39;s events like <code>scroll</code> and 
+<code>resize</code> and applied to the CSS attribute you have specified.</p>
+<p>Rules can be defined by referring to important properties of the 
+document that are evaluated dynamically. For example, this will 
+center vertically <code>.header</code>, dynamically changing the position as 
+the window is resized:</p>
+<pre><code class="lang-css">.header {
+ -dyn-margin-top:          &#39;(@w-height - @i-height)/2.0&#39;;
+}
+</code></pre>
+<p>Here, <code>@w-height</code> is the dynamic height of the window and 
+<code>@i-height</code> is the dynamic height of the current element (<code>.header</code> in this case). The 
+header of this page has been centered in this way. </p>
+<p>You can even create parallax effects by using the window&#39;s <code>scrollTop</code> and dynamically
+apply a CSS 3d transform:</p>
+<pre><code class="lang-css">.header {
+ -dyn-webkit-transform:   &#39;&quot;translate( 0px , #{-1*@w-scrollTop}px) &quot;&#39;;
+}
+</code></pre>
+<p>Since the transform value is a string, we should dynamically create one with 
+the specific value of vertical displacement, by interpolating it with <code>#{..}</code>. </p>
+</div><div class="sub-header__container__short_desc"><h1 id="features">Features</h1>
+<p>You can transform any CSS property — provided that it is writable
+by jQuery&#39;s <code>.css()</code> method — by appending the <code>-dyn-</code> prefix and specifying
+a quoted javascript expression.</p>
+<p>You can use placeholders to access the dynamic info of the document;
+here&#39;s a list of built-in placeholders you can use: </p>
+<table>
+<thead>
+<tr>
+<th>Prefixes</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>@w-foo</code></td>
+<td>dynamically evaluates <code>window.foo()</code></td>
+</tr>
+<tr>
+<td><code>@i-foo</code></td>
+<td>dynamically evaluates <code>$(current-selector).css(foo)</code></td>
+</tr>
+<tr>
+<td><code>@j-foo</code></td>
+<td>dynamically evaluates <code>$(current-selector).foo()</code></td>
+</tr>
+</tbody>
+</table>
+<p>The syntax for the rules should be relatively painless even if you use CSS preprocessors.
+I am even using it in a <code>.less</code> file that compiles without any complaints.</p>
+<h2 id="library-of-functions">Library of functions</h2>
+<p>If you need to introduce custom functions to be evaluated at run-time, you 
+can add them to <code>window.dynCss.lib</code>. For example, here&#39;s how you can introduce 
+a center function that returns the centers of the current window:</p>
+<pre><code>window.dynCss.lib.center = function() {
+ return {x: window.width()/2, y: window.height()/2 };
+}
+</code></pre><p>To use it in a rule, invoke it with the <code>@</code> prefix:</p>
+<pre><code> -dyn-margin-left: &#39;@center().x&#39;;
+</code></pre></div><div class="sub-header__container__examples"></div><div class="sub-header__container__api"></div></div></div><div class="footer"></div><script type="text/javascript" src="js/vendor.js"></script><script type="text/javascript" src="js/client.js"></script><script>window.dynCss.api.setBreakpoints([481,961],'@w-width');
 </script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();                                      
 </script><!-- if IEscript(type="text/javascript", src="js/placeholder.js")--></body></html>

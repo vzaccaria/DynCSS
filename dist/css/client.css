@@ -13,6 +13,9 @@ body {
   font-family: Lato, Helvetica;
   color: white;
 }
+code {
+  font-family: Inconsolata;
+}
 .header {
   width: 70%;
   -dyn-webkit-transform: '"translate( 0px , #{-1*@w-scrollTop}px) "';
@@ -51,13 +54,16 @@ body {
   -dyn-top: '(@w-height)';
   background: white;
   width: 100%;
+  box-sizing: border-box;
 }
 .sub-header__actions {
+  display: inline-block;
+  box-sizing: border-box;
   padding-top: 5em;
   color: #191919;
-  -dyn-width: '@selectFrom(["100%", "85%", "70%"])';
-  margin-left: auto;
-  margin-right: auto;
+  -dyn-width: '@selectFrom(["100%", "80%", "70%"])';
+  -dyn-margin-left: '@selectFrom(["0" , "10%" , "15%"])';
+  -dyn-margin-right: '@selectFrom(["0" , "10%" , "15%"])';
 }
 .sub-header__action {
   box-sizing: border-box;
@@ -82,6 +88,10 @@ body {
   -dyn-padding: '@selectFrom(["0" , "2em" , "2em"])';
   text-align: left;
   white-space: pre-wrap;
+  -dyn-margin-left: '@selectFrom(["0%" , "0%" , "1%"])';
+  -dyn-margin-right: '@selectFrom(["0%" , "0%" , "1%"])';
+}
+.sub-header__action__desc code {
   -webkit-border-top-right-radius: 5px;
   -webkit-border-bottom-right-radius: 5px;
   -webkit-border-bottom-left-radius: 5px;
@@ -97,21 +107,72 @@ body {
   -moz-background-clip: padding-box;
   -webkit-background-clip: padding-box;
   background-clip: padding-box;
-  -dyn-margin-left: '@selectFrom(["0%" , "0%" , "1%"])';
-  -dyn-margin-right: '@selectFrom(["0%" , "0%" , "1%"])';
-}
-.sub-header__action__desc code {
   font-family: Inconsolata;
+}
+.sub-header__container {
+  padding-top: 8em;
+  display: block;
+  color: black;
+}
+hr.sub-header__container__separator {
+  width: 40%;
+}
+.sub-header__container__short_desc {
+  padding: 1em;
+  line-height: 1.5em;
+  font-size: 1.2em;
+  -dyn-width: '@selectFrom(["90%", "80%", "40%"])';
+  margin-left: auto;
+  margin-right: auto;
+  -dyn-opacity: '@easeIn({when: @w-scrollTop, isHigherThan: @j-position.top})';
+  -dyn-webkit-transform: '"translate( #{(1-@onVerticalTarget()) * 300.0}px, 0px )"';
+}
+.sub-header__container__short_desc > p > code {
+  background-color: #f2f2f2;
+  padding: 3px;
+  -webkit-border-top-right-radius: 6px;
+  -webkit-border-bottom-right-radius: 6px;
+  -webkit-border-bottom-left-radius: 6px;
+  -webkit-border-top-left-radius: 6px;
+  -moz-border-radius-topright: 6px;
+  -moz-border-radius-bottomright: 6px;
+  -moz-border-radius-bottomleft: 6px;
+  -moz-border-radius-topleft: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.sub-header__container__short_desc > table {
+  width: 100%;
+  background-color: #f2f2f2;
+  padding: 2em;
+  -webkit-border-top-right-radius: 6px;
+  -webkit-border-bottom-right-radius: 6px;
+  -webkit-border-bottom-left-radius: 6px;
+  -webkit-border-top-left-radius: 6px;
+  -moz-border-radius-topright: 6px;
+  -moz-border-radius-bottomright: 6px;
+  -moz-border-radius-bottomleft: 6px;
+  -moz-border-radius-topleft: 6px;
+  border-top-right-radius: 6px;
+  border-bottom-right-radius: 6px;
+  border-bottom-left-radius: 6px;
+  border-top-left-radius: 6px;
+  -moz-background-clip: padding-box;
+  -webkit-background-clip: padding-box;
+  background-clip: padding-box;
+}
+.sub-header__container__short_desc > table th {
+  min-width: 15%;
+  text-align: left;
 }
 body {
   -dyn-height: '@w-height';
   background: url(../img/silhouette_dune_desktop.jpg) no-repeat center center;
   background-size: cover;
   margin: 0px;
-}
-.container {
-  margin-top: 100px;
-  width: 100px;
-  height: 500px;
-  background-color: red;
 }
