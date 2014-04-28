@@ -8,8 +8,7 @@ _module = ->
       remote:'simple-login'
 
       vendor-js:
-          "./bower_components/underscore.string/lib/underscore.string.js"
-          "./bower_components/jquery/dist/jquery.js"
+          "./bower_components/jquery/dist/jquery.min.js"
           ...
 
       # client files 
