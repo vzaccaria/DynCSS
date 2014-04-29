@@ -1,6 +1,6 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function(){
-  var cssParse, camelize, scrollHandlers, getScrollExpression, createFunction, wRef, updateScope, refreshHandler, buildHandlers, decimate, iOS, counter, lt, fixedTtc, installCustomRaf, installCustomRafHandler, installRafHandler, installScrollHandler;
+  var cssParse, debug, camelize, scrollHandlers, getScrollExpression, createFunction, wRef, updateScope, refreshHandler, buildHandlers, decimate, iOS, counter, lt, fixedTtc, installCustomRaf, installCustomRafHandler, installRafHandler, installScrollHandler;
   cssParse = require('css-parse');
   window.dynCss = {};
   window.dynCss.lib = require('./lib');
@@ -13,6 +13,7 @@
       return window.dynCss.data.variable = variable;
     }
   };
+  debug = false;
   require('./sta');
   camelize = function(str){
     var ex;
@@ -50,7 +51,9 @@
     body = body.replace(/@j-(\w+)/g, 'jQuery(this.el).$1()');
     body = body.replace(/@w-(\w+)/g, '(this.lib.wRef.$1())');
     body = body.replace(/@/g, 'this.lib.');
-    console.log(body);
+    if (debug) {
+      console.log(body);
+    }
     script = document.createElement("script");
     script.text = "window.tmp = function() { return (" + body + "); }.bind(window.dynCss);";
     document.head.appendChild(script).parentNode.removeChild(script);
@@ -150,7 +153,7 @@
     };
     return requestAnimationFrame(wrappedHandler);
   };
-  installScrollHandler = function(){
+  installScrollHandler = function(options){
     var scrollHandler;
     scrollHandler = function(){
       if (counter % decimate === 0) {
@@ -158,9 +161,11 @@
       }
       return counter = counter + 1;
     };
-    window.onscroll = scrollHandler;
+    if ((options != null ? options.onlyResize : void 8) == null) {
+      window.onscroll = scrollHandler;
+      window.ontouchmove = scrollHandler;
+    }
     window.onresize = scrollHandler;
-    window.ontouchmove = scrollHandler;
     return scrollHandler();
   };
   $('link[type="text/css"]').each(function(i, n){
@@ -170,7 +175,9 @@
         rules = cssParse(it).stylesheet.rules;
         buildHandlers(rules);
         if (iOS) {
-          return installCustomRafHandler();
+          return installScrollHandler({
+            onlyResize: true
+          });
         } else {
           return installScrollHandler();
         }
@@ -181,7 +188,8 @@
 
 },{"./lib":2,"./sta":3,"css-parse":4}],2:[function(require,module,exports){
 (function(){
-  var perspective, sat, easeOut, easeIn, selectFrom, _module;
+  var debug, perspective, sat, asPercentageOf, asRemainingPercentageOf, shouldDisappear, shouldAppear, selectFrom, ifThenElse, _module;
+  debug = false;
   perspective = function(px){
     return "perspective(" + px + "px) ";
   };
@@ -195,60 +203,90 @@
       return x;
     }
   };
-  easeOut = function(context){
+  asPercentageOf = function(x, y){
+    return x / y;
+  };
+  asRemainingPercentageOf = function(x, y){
+    return 1 - asPercentageOf(x, y);
+  };
+  shouldDisappear = function(context){
     var isHigherThan, isLowerThan, wn, v;
     isHigherThan = context.isHigherThan, isLowerThan = context.isLowerThan;
     wn = context['when'];
     if (isHigherThan != null && wn != null) {
-      return sat((isHigherThan - wn) / isHigherThan);
+      return sat(asRemainingPercentageOf(wn, isHigherThan));
     }
     if (isLowerThan != null && wn != null) {
-      v = sat((wn - isLowerThan) / isLowerThan);
+      v = sat(asPercentageOf(wn, isLowerThan));
       return v;
     }
   };
-  easeIn = function(context){
-    var isHigherThan, isLowerThan, wn, v;
+  shouldAppear = function(context){
+    var isHigherThan, isLowerThan, wn, vv, int;
     isHigherThan = context.isHigherThan, isLowerThan = context.isLowerThan;
     wn = context['when'];
     if (isHigherThan != null && wn != null) {
-      return sat((wn - isHigherThan) / isHigherThan);
+      int = asPercentageOf(wn, isHigherThan);
     }
     if (isLowerThan != null && wn != null) {
-      v = sat((isLowerThan - wn) / isLowerThan);
-      return v;
+      int = asRemainingPercentageOf(wn, isLowerThan);
     }
+    vv = sat(int);
+    if (debug) {
+      console.log("final: " + vv + ", intermediate: " + int + ", is-higher: " + isHigherThan + ", is-lower: " + isLowerThan);
+    }
+    return vv;
   };
   selectFrom = function(values){
-    var dt, nm, vv, i$, ref$, len$, i, b;
+    var dt, nm, vv, i$, ref$, len$, i, b, error;
     dt = window.dynCss.data;
-    if (dt.variable != null) {
-      nm = dt.variable.replace(/@w-(\w+)/g, '$1');
-      vv = window.dynCss.lib.wRef[nm]();
-      for (i$ = 0, len$ = (ref$ = dt.breakpoints).length; i$ < len$; ++i$) {
-        i = i$;
-        b = ref$[i$];
-        if (vv < b) {
-          return values[i];
+    try {
+      if (dt.variable != null && values.length > 0) {
+        nm = dt.variable.replace(/@w-(\w+)/g, '$1');
+        vv = window.dynCss.lib.wRef[nm]();
+        for (i$ = 0, len$ = (ref$ = dt.breakpoints).length; i$ < len$; ++i$) {
+          i = i$;
+          b = ref$[i$];
+          if (vv < b || i === values.length - 1) {
+            return values[i];
+          }
         }
-      }
-      return values[values.length - 1];
-    } else {}
+        return values[values.length - 1];
+      } else {}
+    } catch (e$) {
+      error = e$;
+    }
+  };
+  ifThenElse = function(cond, v1, v2){
+    if (cond) {
+      return v1;
+    } else {
+      return v2;
+    }
   };
   _module = function(){
     var iface;
     iface = {
-      easeOut: easeOut,
-      easeIn: easeIn,
+      shouldDisappear: shouldDisappear,
+      shouldAppear: shouldAppear,
       perspective: perspective,
       selectFrom: selectFrom,
-      onVerticalTarget: function(){
-        var v;
-        v = easeIn({
+      'if': ifThenElse,
+      shouldBeVisible: function(){
+        var $wTop, $el, $elTop, $elH, $wHeight, $setOff, v;
+        $wTop = $(window).scrollTop();
+        $el = jQuery(window.dynCss.el);
+        $elTop = $el.offset().top;
+        $elH = $el.innerHeight();
+        $wHeight = $(window).height();
+        $setOff = $elTop;
+        v = shouldAppear({
           when: $(window).scrollTop(),
-          isHigherThan: jQuery(window.dynCss.el).position().top
+          isHigherThan: $setOff
         });
-        console.log(v);
+        if (debug) {
+          console.log("top = " + $wTop + ", completed-at = " + $setOff + ", visible = " + v + ", eltop = " + $elTop + ", el-h = " + $elH);
+        }
         return v;
       }
     };

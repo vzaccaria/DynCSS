@@ -63,15 +63,34 @@ here&#39;s a list of built-in placeholders you can use: </p>
 </table>
 <p>The syntax for the rules should be relatively painless even if you use CSS preprocessors.
 I am even using it in a <code>.less</code> file that compiles without any complaints.</p>
-<h2 id="library-of-functions">Library of functions</h2>
-<p>If you need to introduce custom functions to be evaluated at run-time, you 
-can add them to <code>window.dynCss.lib</code>. For example, here&#39;s how you can introduce 
+<h1 id="custom-functions">Custom functions</h1>
+<p>You can introduce custom functions to be evaluated at run-time,  by
+adding them to <code>window.dynCss.lib</code>. For example, here&#39;s how you can introduce 
 a center function that returns the centers of the current window:</p>
-<pre><code>window.dynCss.lib.center = function() {
+<pre><code class="lang-css">window.dynCss.lib.center = function() {
  return {x: window.width()/2, y: window.height()/2 };
 }
-</code></pre><p>To use it in a rule, invoke it with the <code>@</code> prefix:</p>
-<pre><code> -dyn-margin-left: &#39;@center().x&#39;;
-</code></pre></div><div class="sub-header__container__examples"></div><div class="sub-header__container__api"></div></div></div><div class="footer"></div><script type="text/javascript" src="js/vendor.js"></script><script type="text/javascript" src="js/client.js"></script><script>window.dynCss.api.setBreakpoints([481,961],'@w-width');
+</code></pre>
+<p>To use it in a rule, invoke it with the <code>@</code> prefix:</p>
+<pre><code class="lang-css"> -dyn-margin-left: &#39;@center().x&#39;;
+</code></pre>
+</div><div class="sub-header__container__short_desc"><h1 id="responsiveness">Responsiveness</h1>
+<p>DynCSS allows to easily program responsiveness in your CSS. 
+To do so you define a list of <em>breakpoints</em> and 
+the dynamic variable to watch (which is typically the size of the window). You can do this in a <code>&lt;script&gt;</code> tag 
+in your HTML; here&#39;s how you set two breakpoints at 481 and 961 on the window&#39;s width 
+variable <code>@w-width</code>:</p>
+<pre><code class="lang-html">&lt;script&gt; 
+ window.dynCss.api.setBreakpoints([481,961],&#39;@w-width&#39;);
+&lt;/script&gt;
+</code></pre>
+<p>Now, you can define how each property behaves above an below the breakpoints;
+for example, we can change dynamically the font size:</p>
+<pre><code class="lang-css">.header__title {
+  -dyn-font-size : &#39;@selectFrom([&quot;3em&quot;, &quot;4em&quot;, &quot;5em&quot;])&#39;;
+}
+</code></pre>
+<p>In this way, font size will be 3em under 480px, 4em under 960px, and 5em above 960px.</p>
+</div><div class="sub-header__container__examples"></div><div class="sub-header__container__api"></div></div></div><div class="footer"></div><script type="text/javascript" src="js/vendor.js"></script><script type="text/javascript" src="js/client.js"></script><script>window.dynCss.api.setBreakpoints([481,961],'@w-width');
 </script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();                                      
 </script><!-- if IEscript(type="text/javascript", src="js/placeholder.js")--></body></html>
