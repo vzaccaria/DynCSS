@@ -14,6 +14,8 @@ window.dynCss.api = {
         window.dynCss.data.variable = variable 
 }
 
+debug = false
+
 require('./sta')
 
 camelize = (str) ->
@@ -43,7 +45,7 @@ create-function = (body) ->
     body   = body.replace(/@w-(\w+)/g,'(this.lib.wRef.$1())')
     body   = body.replace(/@/g,'this.lib.')
    
-    console.log body 
+    console.log body if debug
     script = document.createElement("script")
     script.text = "window.tmp = function() { return (#body); }.bind(window.dynCss);"
     document.head.appendChild( script ).parentNode.removeChild( script );
@@ -96,8 +98,6 @@ build-handlers = (rules) ->
 
 decimate = 1
 iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
-
-
 counter = 0
 lt = 0
 
@@ -130,15 +130,17 @@ install-raf-handler = ->
 
             request-animation-frame(wrapped-handler)
 
-install-scroll-handler = ->
+install-scroll-handler = (options) ->
             scroll-handler = ->
                 if (counter % decimate) == 0
                     refresh-handler()
                 counter := counter + 1
 
-            window.onscroll     = scroll-handler
+            if not options?.only-resize?
+                window.onscroll     = scroll-handler
+                window.ontouchmove  = scroll-handler
+
             window.onresize     = scroll-handler
-            window.ontouchmove  = scroll-handler
             scroll-handler()
 
 $('link[type="text/css"]').each (i,n) ->
@@ -147,7 +149,7 @@ $('link[type="text/css"]').each (i,n) ->
             rules = css-parse(it).stylesheet.rules
             build-handlers(rules)
             if iOS
-                install-custom-raf-handler()
+                install-scroll-handler({+only-resize})
             else 
                 install-scroll-handler()
             
