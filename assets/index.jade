@@ -121,12 +121,12 @@ html
 						The syntax for the rules should be relatively painless even if you use CSS preprocessors.
 						I am even using it in a `.less` file that compiles without any complaints.
 
-						## Library of functions
-						If you need to introduce custom functions to be evaluated at run-time, you 
-						can add them to `window.dynCss.lib`. For example, here's how you can introduce 
+						# Custom functions 
+						You can introduce custom functions to be evaluated at run-time,  by
+						adding them to `window.dynCss.lib`. For example, here's how you can introduce 
 						a center function that returns the centers of the current window:
 
-						```
+						```css
 						window.dynCss.lib.center = function() {
 							return {x: window.width()/2, y: window.height()/2 };
 						}
@@ -134,10 +134,35 @@ html
 
 						To use it in a rule, invoke it with the `@` prefix:
 
-						```
+						```css
 							-dyn-margin-left: '@center().x';
 						```
 
+				.sub-header__container__short_desc
+					:markdown
+
+						# Responsiveness
+						DynCSS allows to easily program responsiveness in your CSS. 
+						To do so you define a list of *breakpoints* and 
+						the dynamic variable to watch (which is typically the size of the window). You can do this in a `<script>` tag 
+						in your HTML; here's how you set two breakpoints at 481 and 961 on the window's width 
+						variable `@w-width`:
+
+						```html
+						<script> 
+							window.dynCss.api.setBreakpoints([481,961],'@w-width');
+						</script>
+						```
+
+						Now, you can define how each property behaves above an below the breakpoints;
+						for example, we can change dynamically the font size:
+
+						```css 
+						.header__title {
+								-dyn-font-size : '@selectFrom(["3em", "4em", "5em"])';
+						}
+						```	
+						In this way, font size will be 3em under 480px, 4em under 960px, and 5em above 960px.
 
 
 				.sub-header__container__examples
