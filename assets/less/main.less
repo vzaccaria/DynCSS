@@ -163,7 +163,7 @@ hr.sub-header__container__separator {
     width: 40%;
 }
 
-@fly-in-from-right: '"translate( #{ (1-@shouldBeVisible()) * 300.0}px, 0px )"';
+@fly-in-from-right: '"translate( #{ (1-@shouldBeVisible()) * 600.0}px, 0px )"';
 
 .sub-header__container__short_desc {
 
@@ -177,7 +177,8 @@ hr.sub-header__container__separator {
     -dyn-opacity   : '@selectFrom(["1"    , "1"    , @shouldBeVisible()])';
     -dyn-transform : '@selectFrom(["none" , "none" , @{fly-in-from-right} ])';
 
-    & > p > code {
+    & p > code
+    {
         background-color : darken(white, 5%);
         padding          : 3px;
         .border-radius(6px,6px,6px,6px);
