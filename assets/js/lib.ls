@@ -85,11 +85,12 @@ _module = ->
 
           
     iface = {
-        shouldDisappear : shouldDisappear
-        shouldAppear    : shouldAppear
-        perspective     : perspective
-        selectFrom      : selectFrom
-        if: ifThenElse
+        shouldDisappear     : shouldDisappear
+        shouldAppear        : shouldAppear
+        perspective         : perspective
+        selectFrom          : selectFrom
+        isVerticallyVisible : isVerticallyVisible
+        if                  : ifThenElse
 
         shouldBeVisible: ->
             $w-top    = $(window).scrollTop()
