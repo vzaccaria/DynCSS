@@ -93,8 +93,7 @@ build-handlers = (rules) ->
                 { property, expression, trigger} = result 
                 handler = create-function expression
 
-                # let fun = handler, pro = camelize(property), s = sel
-                actions.push { property: camelize(property), funct: handler, sel: sel }
+                actions.push { property: camelize(property), original-property: property, funct: handler, sel: sel }
 
         wrapper = (next) ->
             let act = actions, scoped-sel=sel
