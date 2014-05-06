@@ -31,7 +31,12 @@ window.dynCss.api = {
 
 debug = false
 
-require('./sta')
+#                           
+#       _________  ________ 
+#      / ___/ __ \/ ___/ _ \
+#     / /__/ /_/ / /  /  __/
+#     \___/\____/_/   \___/ 
+#                           
 
 camelize = (str) ->
       ex = /[-_\s]+(.)?/g
@@ -111,6 +116,13 @@ build-handlers = (rules) ->
             refresh-handler := wrapper(refresh-handler)                
 
 
+#         __                    ____              
+#        / /_  ____ _____  ____/ / /__  __________
+#       / __ \/ __ `/ __ \/ __  / / _ \/ ___/ ___/
+#      / / / / /_/ / / / / /_/ / /  __/ /  (__  ) 
+#     /_/ /_/\__,_/_/ /_/\__,_/_/\___/_/  /____/  
+#                                                 
+
 decimate = 1
 iOS = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
 counter = 0
@@ -157,6 +169,13 @@ install-scroll-handler = (options) ->
 
             window.onresize     = scroll-handler
             scroll-handler()
+
+#                         _                     __            
+#        ____ ___  ____ _(_)___     ___  ____  / /________  __
+#       / __ `__ \/ __ `/ / __ \   / _ \/ __ \/ __/ ___/ / / /
+#      / / / / / / /_/ / / / / /  /  __/ / / / /_/ /  / /_/ / 
+#     /_/ /_/ /_/\__,_/_/_/ /_/   \___/_/ /_/\__/_/   \__, /  
+#                                                    /____/   
 
 $('link[type="text/css"]').each (i,n) ->
     if n.href?
