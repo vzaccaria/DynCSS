@@ -105,8 +105,16 @@ build-handlers = (rules) ->
                             window.dynCss.el = $(this)
                             css = {} 
                             for a in act 
-                                css[a.property] = a.funct()
-                            $(this).css(css)
+                                if (r = (a.original-property == /set-state-(.+)/))
+                                    cc = r[1]
+                                    if a.funct()
+                                        window.dynCss.el.addClass(cc)
+                                    else 
+                                        window.dynCss.el.removeClass(cc)
+                                else 
+                                    css[a.property] = a.funct()
+
+                            window.dynCss.el.css(css)
 
                     next(e) if next?
 
