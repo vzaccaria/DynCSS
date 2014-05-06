@@ -43,7 +43,7 @@ start-express = ->
   express = require('express');
   app = express();
   app.use(require('connect-livereload')());
-  app.use(express.static(EXPRESS_ROOT));
+  app.use(express.static(EXPRESS_ROOT, {maxAge: 0}));
   app.listen(EXPRESS_PORT);
 
 var lr
