@@ -110,9 +110,9 @@ hr.sub-header__container__separator {
   margin-right: auto;
   -dyn-width: '@selectFrom(["90%"  , "80%"  , "40%"])';
   -dyn-opacity: '@selectFrom(["1"    , "1"    , @shouldBeVisible()])';
-  -dyn-transform: '@selectFrom(["none" , "none" , "translate( #{ (1-@shouldBeVisible()) * 300.0}px, 0px )" ])';
+  -dyn-transform: '@selectFrom(["none" , "none" , "translate( #{ (1-@shouldBeVisible()) * 600.0}px, 0px )" ])';
 }
-.sub-header__container__short_desc > p > code {
+.sub-header__container__short_desc p > code {
   background-color: #f2f2f2;
   padding: 3px;
   -webkit-border-top-right-radius: 6px;
@@ -158,6 +158,40 @@ hr.sub-header__container__separator {
 .sub-header__container__short_desc > table th {
   min-width: 15%;
   text-align: left;
+}
+.toc {
+  position: fixed;
+  -dyn-opacity: '@shouldAppear({when : @w-scrollTop, isHigherThan : @w-height/4}) - 0.3';
+  -dyn-display: '@selectFrom(["none"  , "none"  , "block"])';
+  left: 0px;
+  z-index: 1;
+  padding-top: 1em;
+  padding-bottom: 1em;
+  background-color: #ecf0f1;
+  color: #34495e;
+}
+.toc__section {
+  box-sizing: border-box;
+  display: block;
+  font-size: 1em;
+  padding: 1em 2em 1em 2em;
+}
+.toc__section.highlight {
+  color: #ecf0f1;
+  background-color: #34495e;
+  transition: 200ms;
+}
+.toc__section--what_is_it {
+  -dyn-set-state-highlight: '@isVerticallyVisible("#what-is-it.sub-header__container__short_desc")';
+}
+.toc__section--features {
+  -dyn-set-state-highlight: '@isVerticallyVisible("#features.sub-header__container__short_desc")';
+}
+.toc__section--responsiveness {
+  -dyn-set-state-highlight: '@isVerticallyVisible("#responsiveness.sub-header__container__short_desc")';
+}
+.toc__section--api {
+  -dyn-set-state-highlight: '@isVerticallyVisible("#api.sub-header__container__short_desc")';
 }
 body {
   background: url(../img/silhouette_dune_desktop.jpg) no-repeat center center;

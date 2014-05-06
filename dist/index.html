@@ -1,4 +1,4 @@
-<!DOCTYPE html><html><head lang="en"><title>A simple login </title><meta http-equiv="content-type" content="text/html, charset=UTF-8"><meta name="description" content=""><meta name="keywords" content=""><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><!-- if lt IE 9script(type="text/javascript", src="js/html5shiv.js")--><link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"><link rel="stylesheet" type="text/css" href="//highlightjs.org/static/styles/obsidian.css"><link rel="stylesheet" href="css/client.css" type="text/css"></head><body><div class="overlay"></div><div class="header"><div class="header__title"><strong>Dyn</strong>CSS</div><div class="header__sub-title">Simple dynamic CSS rules to give life to your sites.</div><div class="header__buttons"><a class="header__button">Download</a><a class="header__button">Star</a><a class="header__button">Docs</a></div></div><div class="sub-header"><div class="sub-header__actions"><div class="sub-header__action"><i class="sub-header__action__icon fa fa-cloud-download"></i><div class="sub-header__action__text">Install</div><div class="sub-header__action__desc"><pre><code class="lang-shell">$ bower install DynCSS
+<!DOCTYPE html><html><head lang="en"><title>A simple login </title><meta http-equiv="content-type" content="text/html, charset=UTF-8"><meta name="description" content=""><meta name="keywords" content=""><meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0"><!-- if lt IE 9script(type="text/javascript", src="js/html5shiv.js")--><link href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css" rel="stylesheet"><link rel="stylesheet" type="text/css" href="//highlightjs.org/static/styles/obsidian.css"><link rel="stylesheet" href="css/client.css" type="text/css"></head><body><div class="overlay"></div><div class="toc"><div class="toc__section toc__section--what_is_it">What is it </div><div class="toc__section toc__section--features">Features</div><div class="toc__section toc__section--responsiveness">Responsiveness</div><div class="toc__section toc__section--api">API</div></div><div class="header"><div class="header__title"><strong>Dyn</strong>CSS</div><div class="header__sub-title">Simple dynamic CSS rules to give life to your sites.</div><div class="header__buttons"><a class="header__button">Download</a><a class="header__button">Star</a><a class="header__button">Docs</a></div></div><div class="sub-header"><div class="sub-header__actions"><div class="sub-header__action"><i class="sub-header__action__icon fa fa-cloud-download"></i><div class="sub-header__action__text">Install</div><div class="sub-header__action__desc"><pre><code class="lang-shell">$ bower install DynCSS
 </code></pre>
 </div></div><div class="sub-header__action"><i class="sub-header__action__icon fa fa-html5"></i><div class="sub-header__action__text">Include</div><div class="sub-header__action__desc"><pre><code class="lang-html">...
 &lt;script src=&#39;...dyncss.min.js&#39;
@@ -10,7 +10,7 @@
      &#39;&quot;rotate(#{@w-scrollTop}deg) &quot;&#39;;
 }
 </code></pre>
-</div></div></div><div class="sub-header__container"><hr class="sub-header__container__separator"><div class="sub-header__container__short_desc"><h1 id="what-is-it-">What is it?</h1>
+</div></div></div><div class="sub-header__container"><hr class="sub-header__container__separator"><div id="what-is-it" class="sub-header__container__short_desc"><h1 id="what-is-it-">What is it?</h1>
 <p>DynCSS can parse your CSS for additional <code>-dyn-</code> rules. These 
 rules are evaluated on browser&#39;s events like <code>scroll</code> and 
 <code>resize</code> and applied to the CSS attribute you have specified.</p>
@@ -19,7 +19,7 @@ document that are evaluated dynamically. For example, this will
 center vertically <code>.header</code>, dynamically changing the position as 
 the window is resized:</p>
 <pre><code class="lang-css">.header {
- -dyn-margin-top:          &#39;(@w-height - @i-height)/2.0&#39;;
+ -dyn-margin-top: &#39;(@w-height - @i-height)/2.0&#39;;
 }
 </code></pre>
 <p>Here, <code>@w-height</code> is the dynamic height of the window and 
@@ -33,7 +33,7 @@ apply a CSS 3d transform:</p>
 </code></pre>
 <p>Since the transform value is a string, we should dynamically create one with 
 the specific value of vertical displacement, by interpolating it with <code>#{..}</code>. </p>
-</div><div class="sub-header__container__short_desc"><h1 id="features">Features</h1>
+</div><div id="features" class="sub-header__container__short_desc"><h1 id="features">Features</h1>
 <p>You can transform any CSS property — provided that it is writable
 by jQuery&#39;s <code>.css()</code> method — by appending the <code>-dyn-</code> prefix and specifying
 a quoted javascript expression.</p>
@@ -74,9 +74,9 @@ a center function that returns the centers of the current window:</p>
 <p>To use it in a rule, invoke it with the <code>@</code> prefix:</p>
 <pre><code class="lang-css"> -dyn-margin-left: &#39;@center().x&#39;;
 </code></pre>
-</div><div class="sub-header__container__short_desc"><h1 id="responsiveness">Responsiveness</h1>
+</div><div id="responsiveness" class="sub-header__container__short_desc"><h1 id="responsiveness">Responsiveness</h1>
 <p>DynCSS allows to easily program responsiveness in your CSS. 
-To do so you define a list of <em>breakpoints</em> and 
+To do so you define a list of breakpoints and 
 the dynamic variable to watch (which is typically the size of the window). You can do this in a <code>&lt;script&gt;</code> tag 
 in your HTML; here&#39;s how you set two breakpoints at 481 and 961 on the window&#39;s width 
 variable <code>@w-width</code>:</p>
@@ -87,10 +87,59 @@ variable <code>@w-width</code>:</p>
 <p>Now, you can define how each property behaves above an below the breakpoints;
 for example, we can change dynamically the font size:</p>
 <pre><code class="lang-css">.header__title {
-  -dyn-font-size : &#39;@selectFrom([&quot;3em&quot;, &quot;4em&quot;, &quot;5em&quot;])&#39;;
+  -dyn-font-size: &#39;@selectFrom([&quot;3em&quot;, &quot;4em&quot;, &quot;5em&quot;])&#39;;
 }
 </code></pre>
-<p>In this way, font size will be 3em under 480px, 4em under 960px, and 5em above 960px.</p>
-</div><div class="sub-header__container__examples"></div><div class="sub-header__container__api"></div></div></div><div class="footer"></div><script type="text/javascript" src="js/vendor.js"></script><script type="text/javascript" src="js/client.js"></script><script>window.dynCss.api.setBreakpoints([481,961],'@w-width');
+<p><code>selectFrom</code> is a built-in function that returns one of the elements of the input list 
+by using the breakpoints specified with <code>setBreakpoints</code>. 
+Here, the font size will be 3em under 480px, 4em under 960px, and 5em above 960px.</p>
+</div><div id="api" class="sub-header__container__short_desc"><h1 id="api">API</h1>
+<p>Here are some built-in functions you can use in your <code>-dyn-css</code> rules:</p>
+<ul>
+<li><p><code>shouldAppear({when: expr, isHigherThan: val})</code>: </p>
+<p>returns: </p>
+<ul>
+<li>0 — when <code>expr</code> is lower than 0</li>
+<li><code>expr/val</code> — when <code>expr</code> is higher than 0 but lower than <code>val</code></li>
+<li>1 — when <code>expr</code> is higher than <code>val</code></li>
+</ul>
+<p><strong>Example</strong>: this snippet turns up element visibility when scrolling position (<code>@w-scrollTop</code>) is
+reaching a half of the window&#39;s height:</p>
+<pre><code class="lang-css">.header {
+-dyn-opacity: &#39;@shouldAppear({when: @w-scrollTop, isHigherThan: @w-height/2})&#39;;
+}
+</code></pre>
+</li>
+<li><p><code>shouldDisappear({when: expr, isHigherThan: val})</code></p>
+<p>returns:  </p>
+<ul>
+<li>1 — when <code>expr</code> is lower than 0</li>
+<li><code>1-expr/val</code> — when <code>expr</code> is higher than 0 but lower than <code>val</code></li>
+<li>0 — when <code>expr</code> is higher than <code>val</code>                                </li>
+</ul>
+<p><strong>Example</strong>: this snippet turns down opacity when scrolling position (<code>@w-scrollTop</code>) is
+reaching a fourth of the window&#39;s height:</p>
+<pre><code class="lang-css">.header {
+-dyn-opacity: &#39;@shouldDisappear({when: @w-scrollTop, isHigherThan: @w-height/4})&#39;;
+}
+</code></pre>
+</li>
+</ul>
+<p>You can use a <code>isLowerThan</code> value instead of <code>isHigherThan</code> in the above functions. This inverts their behavior.</p>
+<ul>
+<li><p><code>selectFrom(array)</code></p>
+<p>Returns the element of <code>array</code> associated with the currently active breakpoint (i.e., the one with the same index).
+Breakpoints are set by using <code>setBreakpoints</code>. </p>
+</li>
+</ul>
+<h1 id="other-functions">Other functions</h1>
+<p><code>window.dynCss.api.setBreakpoints(array, expstring)</code>: sets internal breakpoints to <code>array</code>. Breakpoints are evaluated 
+against <code>expstring</code> so, for example: </p>
+<pre><code class="lang-html">&lt;script&gt; 
+ window.dynCss.api.setBreakpoints([321],&#39;@w-width&#39;);
+&lt;/script&gt;
+</code></pre>
+<p>sets one breakpoint at window&#39;s width equal to 320.</p>
+</div></div></div><div class="footer"></div><script type="text/javascript" src="js/vendor.js"></script><script type="text/javascript" src="js/client.js"></script><script>window.dynCss.api.setBreakpoints([481,961],'@w-width');
 </script><script src="//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js"></script><script>hljs.initHighlightingOnLoad();                                      
 </script><!-- if IEscript(type="text/javascript", src="js/placeholder.js")--></body></html>

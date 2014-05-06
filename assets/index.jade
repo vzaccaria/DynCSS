@@ -14,6 +14,13 @@ html
 	body
 		//- BEM Rules.
 		.overlay
+
+		.toc 
+			.toc__section.toc__section--what_is_it What is it 
+			.toc__section.toc__section--features Features
+			.toc__section.toc__section--responsiveness Responsiveness
+			.toc__section.toc__section--api API
+
 		.header
 			.header__title
 				strong Dyn
@@ -65,7 +72,7 @@ html
 			.sub-header__container
 				hr.sub-header__container__separator 
 
-				.sub-header__container__short_desc
+				#what-is-it.sub-header__container__short_desc
 					:markdown
 						# What is it? 
 
@@ -80,7 +87,7 @@ html
 
 						```css 
 						.header {
-							-dyn-margin-top: 		 '(@w-height - @i-height)/2.0';
+							-dyn-margin-top: '(@w-height - @i-height)/2.0';
 						}
 						```
 
@@ -100,7 +107,7 @@ html
 						Since the transform value is a string, we should dynamically create one with 
 						the specific value of vertical displacement, by interpolating it with `\#{..}`. 
 
-				.sub-header__container__short_desc
+				#features.sub-header__container__short_desc
 					:markdown
 
 						# Features 
@@ -138,12 +145,12 @@ html
 							-dyn-margin-left: '@center().x';
 						```
 
-				.sub-header__container__short_desc
+				#responsiveness.sub-header__container__short_desc
 					:markdown
 
 						# Responsiveness
 						DynCSS allows to easily program responsiveness in your CSS. 
-						To do so you define a list of *breakpoints* and 
+						To do so you define a list of breakpoints and 
 						the dynamic variable to watch (which is typically the size of the window). You can do this in a `<script>` tag 
 						in your HTML; here's how you set two breakpoints at 481 and 961 on the window's width 
 						variable `@w-width`:
@@ -159,15 +166,76 @@ html
 
 						```css 
 						.header__title {
-								-dyn-font-size : '@selectFrom(["3em", "4em", "5em"])';
+								-dyn-font-size: '@selectFrom(["3em", "4em", "5em"])';
 						}
 						```	
-						In this way, font size will be 3em under 480px, 4em under 960px, and 5em above 960px.
+
+						`selectFrom` is a built-in function that returns one of the elements of the input list 
+						by using the breakpoints specified with `setBreakpoints`. 
+						Here, the font size will be 3em under 480px, 4em under 960px, and 5em above 960px.
 
 
-				.sub-header__container__examples
+				#api.sub-header__container__short_desc
+					:markdown
 
-				.sub-header__container__api
+						# API 
+
+						Here are some built-in functions you can use in your `-dyn-css` rules:
+
+						* `shouldAppear({when: expr, isHigherThan: val})`: 
+
+							returns: 
+
+								- 0 — when `expr` is lower than 0
+								- `expr/val` — when `expr` is higher than 0 but lower than `val`
+								- 1 — when `expr` is higher than `val`
+
+							**Example**: this snippet turns up element visibility when scrolling position (`@w-scrollTop`) is
+							reaching a half of the window's height:
+
+							```css
+							.header {
+								-dyn-opacity: '@shouldAppear({when: @w-scrollTop, isHigherThan: @w-height/2})';
+							}
+							```
+
+						* `shouldDisappear({when: expr, isHigherThan: val})`
+
+							returns:  
+
+								- 1 — when `expr` is lower than 0
+								- `1-expr/val` — when `expr` is higher than 0 but lower than `val`
+								- 0 — when `expr` is higher than `val`								
+
+							**Example**: this snippet turns down opacity when scrolling position (`@w-scrollTop`) is
+							reaching a fourth of the window's height:
+
+							```css
+							.header {
+								-dyn-opacity: '@shouldDisappear({when: @w-scrollTop, isHigherThan: @w-height/4})';
+							}
+							```
+
+						You can use a `isLowerThan` value instead of `isHigherThan` in the above functions. This inverts their behavior.
+
+						* `selectFrom(array)`
+
+							Returns the element of `array` associated with the currently active breakpoint (i.e., the one with the same index).
+							Breakpoints are set by using `setBreakpoints`. 
+
+						# Other functions 
+							
+						`window.dynCss.api.setBreakpoints(array, expstring)`: sets internal breakpoints to `array`. Breakpoints are evaluated 
+						against `expstring` so, for example: 
+
+						```html
+						<script> 
+							window.dynCss.api.setBreakpoints([321],'@w-width');
+						</script>
+						```	
+						
+						sets one breakpoint at window's width equal to 320.
+
 				
 
 		.footer 
