@@ -1,17 +1,32 @@
 
 css-parse = require('css-parse')
-
 window.dynCss = {}
 window.dynCss.lib = require('./lib')
 
 window.dynCss.data = {}
-window.dynCss.data.breakpoints = []
-window.dynCss.data.variable = void
+
+
+#         __                    __               _       __      
+#        / /_  ________  ____ _/ /______  ____  (_)___  / /______
+#       / __ \/ ___/ _ \/ __ `/ //_/ __ \/ __ \/ / __ \/ __/ ___/
+#      / /_/ / /  /  __/ /_/ / ,< / /_/ / /_/ / / / / / /_(__  ) 
+#     /_.___/_/   \___/\__,_/_/|_/ .___/\____/_/_/ /_/\__/____/  
+#                               /_/                              
+
+class breakpoint
+
+    (@name, @breakpoints, @expression) ->
+        @compiled = create-function @expression 
+
+set-named-breakpoints = (name, list, expression) ->
+        window.dynCss.data[name] = new breakpoint(name, list, expression)
+
+set-breakpoints = (list, variable) ->
+        set-named-breakpoints 'responsive', list, variable
 
 window.dynCss.api = {
-    set-breakpoints: (list, variable) ->
-        window.dynCss.data.breakpoints = list 
-        window.dynCss.data.variable = variable 
+    set-breakpoints:            set-breakpoints 
+    set-named-breakpoints:      set-named-breakpoints 
 }
 
 debug = false
