@@ -1,20 +1,32 @@
 (function e(t,n,r){function s(o,u){if(!n[o]){if(!t[o]){var a=typeof require=="function"&&require;if(!u&&a)return a(o,!0);if(i)return i(o,!0);throw new Error("Cannot find module '"+o+"'")}var f=n[o]={exports:{}};t[o][0].call(f.exports,function(e){var n=t[o][1][e];return s(n?n:e)},f,f.exports,e,t,n,r)}return n[o].exports}var i=typeof require=="function"&&require;for(var o=0;o<r.length;o++)s(r[o]);return s})({1:[function(require,module,exports){
 (function(){
-  var cssParse, debug, camelize, scrollHandlers, getScrollExpression, createFunction, wRef, updateScope, refreshHandler, buildHandlers, decimate, iOS, counter, lt, fixedTtc, installCustomRaf, installCustomRafHandler, installRafHandler, installScrollHandler;
+  var cssParse, breakpoint, setNamedBreakpoints, setBreakpoints, debug, camelize, scrollHandlers, getScrollExpression, createFunction, wRef, updateScope, refreshHandler, buildHandlers, decimate, iOS, counter, lt, fixedTtc, installCustomRaf, installCustomRafHandler, installRafHandler, installScrollHandler;
   cssParse = require('css-parse');
   window.dynCss = {};
   window.dynCss.lib = require('./lib');
   window.dynCss.data = {};
-  window.dynCss.data.breakpoints = [];
-  window.dynCss.data.variable = void 8;
-  window.dynCss.api = {
-    setBreakpoints: function(list, variable){
-      window.dynCss.data.breakpoints = list;
-      return window.dynCss.data.variable = variable;
+  breakpoint = (function(){
+    breakpoint.displayName = 'breakpoint';
+    var prototype = breakpoint.prototype, constructor = breakpoint;
+    function breakpoint(name, breakpoints, expression){
+      this.name = name;
+      this.breakpoints = breakpoints;
+      this.expression = expression;
+      this.compiled = createFunction(this.expression);
     }
+    return breakpoint;
+  }());
+  setNamedBreakpoints = function(name, list, expression){
+    return window.dynCss.data[name] = new breakpoint(name, list, expression);
+  };
+  setBreakpoints = function(list, variable){
+    return setNamedBreakpoints('responsive', list, variable);
+  };
+  window.dynCss.api = {
+    setBreakpoints: setBreakpoints,
+    setNamedBreakpoints: setNamedBreakpoints
   };
   debug = false;
-  require('./sta');
   camelize = function(str){
     var ex;
     ex = /[-_\s]+(.)?/g;
@@ -46,7 +58,6 @@
     body = body.replace(/@a-(\w+){(.+)}/g, 'jQuery(\'$2\').$1()');
     body = body.replace(/@p-(\w+){(.+)}/g, 'jQuery(\'$2\').position().$1');
     body = body.replace(/\#{(.+)}/g, '"+($1)+"');
-    body = body.replace(/\#(\w+)/g, '"+($1)+"');
     body = body.replace(/@i-(\w+)/g, 'parseInt(this.el.css(\'$1\'))');
     body = body.replace(/@j-(\w+)/g, 'jQuery(this.el).$1()');
     body = body.replace(/@w-(\w+)/g, '(this.lib.wRef.$1())');
@@ -79,6 +90,7 @@
             handler = createFunction(expression);
             actions.push({
               property: camelize(property),
+              originalProperty: property,
               funct: handler,
               sel: sel
             });
@@ -104,14 +116,23 @@
             return next(e);
           }
           function fn$(i){
-            var css, i$, ref$, len$, a;
+            var css, i$, ref$, len$, a, r, cc;
             window.dynCss.el = $(this);
             css = {};
             for (i$ = 0, len$ = (ref$ = act).length; i$ < len$; ++i$) {
               a = ref$[i$];
-              css[a.property] = a.funct();
+              if (r = /set-state-(.+)/.exec(a.originalProperty)) {
+                cc = r[1];
+                if (a.funct()) {
+                  window.dynCss.el.addClass(cc);
+                } else {
+                  window.dynCss.el.removeClass(cc);
+                }
+              } else {
+                css[a.property] = a.funct();
+              }
             }
-            return $(this).css(css);
+            return window.dynCss.el.css(css);
           }
         };
       }.call(this, actions, sel));
@@ -161,7 +182,7 @@
       }
       return counter = counter + 1;
     };
-    if ((options != null ? options.onlyResize : void 8) == null) {
+    if ((options != null ? options.onlyOnResize : void 8) == null) {
       window.onscroll = scrollHandler;
       window.ontouchmove = scrollHandler;
     }
@@ -176,7 +197,7 @@
         buildHandlers(rules);
         if (iOS) {
           return installScrollHandler({
-            onlyResize: true
+            onlyOnResize: true
           });
         } else {
           return installScrollHandler();
@@ -186,9 +207,9 @@
   });
 }).call(this);
 
-},{"./lib":2,"./sta":3,"css-parse":4}],2:[function(require,module,exports){
+},{"./lib":2,"css-parse":3}],2:[function(require,module,exports){
 (function(){
-  var debug, perspective, sat, asPercentageOf, asRemainingPercentageOf, shouldDisappear, shouldAppear, selectFrom, ifThenElse, _module;
+  var debug, perspective, sat, asPercentageOf, asRemainingPercentageOf, shouldDisappear, shouldAppear, selectFrom, ifThenElse, isVerticallyVisible, _module;
   debug = false;
   perspective = function(px){
     return "perspective(" + px + "px) ";
@@ -238,12 +259,11 @@
     return vv;
   };
   selectFrom = function(values){
-    var dt, nm, vv, i$, ref$, len$, i, b, error;
-    dt = window.dynCss.data;
+    var dt, vv, i$, ref$, len$, i, b, error;
+    dt = window.dynCss.data['responsive'];
     try {
-      if (dt.variable != null && values.length > 0) {
-        nm = dt.variable.replace(/@w-(\w+)/g, '$1');
-        vv = window.dynCss.lib.wRef[nm]();
+      if (dt.compiled != null && values.length > 0) {
+        vv = dt.compiled();
         for (i$ = 0, len$ = (ref$ = dt.breakpoints).length; i$ < len$; ++i$) {
           i = i$;
           b = ref$[i$];
@@ -264,6 +284,25 @@
       return v2;
     }
   };
+  isVerticallyVisible = function(el){
+    var r, w, vp, value;
+    r = jQuery(el)[0].getBoundingClientRect();
+    w = jQuery(window);
+    vp = {};
+    vp.top = w.scrollTop();
+    vp.bottom = w.scrollTop() + w.height();
+    value = (function(){
+      switch (false) {
+      case !(r.top >= 0 && r.top < w.height()):
+        return true;
+      case !(r.top <= 0 && r.bottom >= w.height()):
+        return true;
+      default:
+        return false;
+      }
+    }());
+    return value;
+  };
   _module = function(){
     var iface;
     iface = {
@@ -271,6 +310,7 @@
       shouldAppear: shouldAppear,
       perspective: perspective,
       selectFrom: selectFrom,
+      isVerticallyVisible: isVerticallyVisible,
       'if': ifThenElse,
       shouldBeVisible: function(){
         var $wTop, $el, $elTop, $elH, $wHeight, $setOff, v;
@@ -296,110 +336,6 @@
 }).call(this);
 
 },{}],3:[function(require,module,exports){
-(function(){
-  (function(window){
-    var createTimer, resetTimer, timeouts, intervals, orgSetTimeout, orgSetInterval, orgClearTimeout, orgClearInterval;
-    createTimer = function(set, map, args){
-      var callback, id, cb, repeat;
-      callback = function(){
-        var cb;
-        if (cb) {
-          cb.apply(window, arguments);
-          if (!repeat) {
-            delete map[id];
-            return cb = null;
-          }
-        }
-      };
-      id = void 8;
-      cb = args[0];
-      repeat = set === orgSetInterval;
-      args[0] = callback;
-      id = set.apply(window, args);
-      map[id] = {
-        args: args,
-        created: Date.now(),
-        cb: cb,
-        id: id
-      };
-      return id;
-    };
-    resetTimer = function(set, clear, map, virtualId, correctInterval){
-      var callback, timer, repeat, interval, reduction;
-      callback = function(){
-        if (timer.cb) {
-          timer.cb.apply(window, arguments);
-          if (!repeat) {
-            delete map[virtualId];
-            return timer.cb = null;
-          }
-        }
-      };
-      timer = map[virtualId];
-      if (!timer) {
-        return;
-      }
-      repeat = set === orgSetInterval;
-      clear(timer.id);
-      if (!repeat) {
-        interval = timer.args[1];
-        reduction = Date.now() - timer.created;
-        if (reduction < 0) {
-          reduction = 0;
-        }
-        interval -= reduction;
-        if (interval < 0) {
-          interval = 0;
-        }
-        timer.args[1] = interval;
-      }
-      timer.args[0] = callback;
-      timer.created = Date.now();
-      return timer.id = set.apply(window, timer.args);
-    };
-    timeouts = {};
-    intervals = {};
-    orgSetTimeout = window.setTimeout;
-    orgSetInterval = window.setInterval;
-    orgClearTimeout = window.clearTimeout;
-    orgClearInterval = window.clearInterval;
-    window.setTimeout = function(){
-      return createTimer(orgSetTimeout, timeouts, arguments);
-    };
-    window.setInterval = function(){
-      return createTimer(orgSetInterval, intervals, arguments);
-    };
-    window.clearTimeout = function(id){
-      var timer;
-      timer = timeouts[id];
-      if (timer) {
-        delete timeouts[id];
-        return orgClearTimeout(timer.id);
-      }
-    };
-    window.clearInterval = function(id){
-      var timer;
-      timer = intervals[id];
-      if (timer) {
-        delete intervals[id];
-        return orgClearInterval(timer.id);
-      }
-    };
-    return window.addEventListener('scroll', function(){
-      var virtualId, results$ = [];
-      virtualId = void 8;
-      for (virtualId in timeouts) {
-        resetTimer(orgSetTimeout, orgClearTimeout, timeouts, virtualId);
-      }
-      for (virtualId in intervals) {
-        results$.push(resetTimer(orgSetInterval, orgClearInterval, intervals, virtualId));
-      }
-      return results$;
-    });
-  })(window);
-}).call(this);
-
-},{}],4:[function(require,module,exports){
 
 module.exports = function(css, options){
   options = options || {};
