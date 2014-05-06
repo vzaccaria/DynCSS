@@ -169,7 +169,7 @@ install-scroll-handler = (options) ->
                     refresh-handler()
                 counter := counter + 1
 
-            if not options?.only-resize?
+            if not options?.only-on-resize?
                 window.onscroll     = scroll-handler
                 window.ontouchmove  = scroll-handler
 
@@ -189,7 +189,7 @@ $('link[type="text/css"]').each (i,n) ->
             rules = css-parse(it).stylesheet.rules
             build-handlers(rules)
             if iOS
-                install-scroll-handler({+only-resize})
+                install-scroll-handler({+only-on-resize})
             else 
                 install-scroll-handler()
             
