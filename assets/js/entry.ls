@@ -56,14 +56,13 @@ get-scroll-expression = (d) ->
 
 create-function = (body) ->
 
-    body   = body.replace(/@a-(\w+){(.+)}/g, 'jQuery(\'$2\').$1()')
-    body   = body.replace(/@p-(\w+){(.+)}/g, 'jQuery(\'$2\').position().$1')
-    body   = body.replace(/\#{(.+)}/g, '"+($1)+"')
-    body   = body.replace(/\#(\w+)/g, '"+($1)+"')
-    body   = body.replace(/@i-(\w+)/g,'parseInt(this.el.css(\'$1\'))')
-    body   = body.replace(/@j-(\w+)/g,'jQuery(this.el).$1()')
-    body   = body.replace(/@w-(\w+)/g,'(this.lib.wRef.$1())')
-    body   = body.replace(/@/g,'this.lib.')
+    body   = body.replace(/@a-(\w+){(.+)}/g , 'jQuery(\'$2\').$1()')
+    body   = body.replace(/@p-(\w+){(.+)}/g , 'jQuery(\'$2\').position().$1')
+    body   = body.replace(/\#{(.+)}/g       , '"+($1)+"')
+    body   = body.replace(/@i-(\w+)/g       , 'parseInt(this.el.css(\'$1\'))')
+    body   = body.replace(/@j-(\w+)/g       , 'jQuery(this.el).$1()')
+    body   = body.replace(/@w-(\w+)/g       , '(this.lib.wRef.$1())')
+    body   = body.replace(/@/g              , 'this.lib.')
    
     console.log body if debug
     script = document.createElement("script")
