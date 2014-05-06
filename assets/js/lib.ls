@@ -43,14 +43,15 @@ shouldAppear = (context) ->
     return vv
 
 selectFrom = (values) ->
-    dt = window.dynCss.data
+    dt = window.dynCss.data['responsive']
     try
-        if dt.variable? and values.length > 0
-            nm = dt.variable.replace /@w-(\w+)/g, '$1'
-            vv = window.dynCss.lib.wRef[nm]()
+        if dt.compiled? and values.length > 0
+            vv = dt.compiled()
             for b,i in dt.breakpoints 
+
                 if vv < b or (i == (values.length - 1))
                     return values[i]
+                    
             return values[values.length - 1]
         else 
             return void
