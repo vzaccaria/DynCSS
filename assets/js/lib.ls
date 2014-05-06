@@ -64,7 +64,23 @@ ifThenElse = (cond, v1, v2) ->
     else 
         v2
 
+isVerticallyVisible = (el) ->
 
+    r         = jQuery(el)[0].getBoundingClientRect();
+    w         = jQuery(window)
+    vp        = {}
+    vp.top    = w.scrollTop()
+    vp.bottom = w.scrollTop() + w.height()
+
+    value = 
+        | r.top >= 0 and r.top < w.height()     => true
+        | r.top <= 0 and r.bottom >= w.height() => true
+        | otherwise                             => false
+
+    return value 
+
+
+    
 _module = ->
 
           
