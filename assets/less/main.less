@@ -441,8 +441,8 @@ hr.sub-header__container__separator {
 }
 
 .footer__common-properties() {
-    padding-top : 4em;
-    padding-bottom: 4em;
+    -dyn-padding-top    : '@selectFrom(["1em" , "1em" , "4em"])';
+    -dyn-padding-bottom : '@selectFrom(["1em" , "1em" , "4em"])';
 }
 
 a:visited, a:link {
@@ -453,7 +453,7 @@ a:visited, a:link {
 
     .aligned-blocks();
     .footer__common-properties();
-    text-align: right;
+    -dyn-text-align  : '@selectFrom(["center" , "center" , "right"])';
     &:before {
         .smallcaps(white, 300);
         content: 'made by';
@@ -478,7 +478,7 @@ a:visited, a:link {
 .sub-header__footer__share {
     .aligned-blocks();
     .footer__common-properties();
-    text-align: left;
+    -dyn-text-align  : '@selectFrom(["center" , "center" , "left"])';
 }
 
 
