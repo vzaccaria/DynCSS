@@ -252,6 +252,215 @@ hr.sub-header__container__separator {
 .toc__section--api {
     -dyn-set-state-highlight: '@isVerticallyVisible("#api.sub-header__container__short_desc")';
 }
+
+//                    _ 
+//       ____ _____  (_)
+//      / __ `/ __ \/ / 
+//     / /_/ / /_/ / /  
+//     \__,_/ .___/_/   
+//         /_/          
+
+.api__hr {
+   // display: block;
+   margin-top: 1em;
+   margin-bottom: 1em;
+   margin-left: auto;
+   margin-right: auto;
+   padding-top: 10em;
+   height: 0;
+   width: 20%;
+   max-height: 0;
+   font-size: 1px;
+   line-height: 0;
+   // clear: both;
+   border: none;
+   border-top: 1px solid #aaaaaa;
+   border-bottom: 1px solid #ffffff;
+}
+
+.api__element {
+    margin-top: 4em;
+}
+
+.api__element__name {
+    display: inline;
+    font-size: 1.2em;
+    padding: .5em;
+    box-sizing: border-box; 
+    border: solid 1px black;
+    .border-radius(5px,5px,5px,5px);
+}
+
+.api__element__use {
+    display: block;
+    margin-top: 2em;
+    font-family: Inconsolata;
+}
+
+
+.api_font() {
+    font-family: Lato, Helvetica; 
+    font-weight: 300;
+    font-size: .9em;
+
+}
+
+.api__small_title() {
+    display: block;
+    padding-top: 1em;
+    .smallcaps(black, 300);
+}
+
+.api__element__use:before {
+    .api_font();
+    .api__small_title();
+    content: 'invocation:';
+}
+
+.api__element__command_desc:before {
+    .api_font();
+    .api__small_title();
+    content: 'description:';
+}
+
+.api__element__returns {
+    &:before {
+        .api_font();
+        .api__small_title();
+        content: 'returns:';
+    }
+}
+
+
+.api__element__returns__element {
+    margin-top: .5em;
+    width: 100%;
+    background-color: darken(white,5%);
+}
+
+.api__element__returns__element__value {
+    width: 20%;
+    display: inline-block;
+}
+
+.api__element__returns__element__when {
+    width: 60%;
+    display: inline-block;
+}
+
+.api__element__returns__element__when:before {
+    content: 'when';
+    padding-right: 1em;
+    .api_font();
+}
+
+.api__element_example {
+   &:before {
+    .api_font();
+    .api__small_title();
+    content: 'example:';
+   } 
+}
+
+.api__element_variations {
+       &:before {
+    .api_font();
+    .api__small_title();
+    content: 'variations:';
+   } 
+}
+
+//         ____            __           
+//        / __/___  ____  / /____  _____
+//       / /_/ __ \/ __ \/ __/ _ \/ ___/
+//      / __/ /_/ / /_/ / /_/  __/ /    
+//     /_/  \____/\____/\__/\___/_/     
+//                                      
+
+.sub-header__footer {
+    margin-top       : 5em;
+    background-color : @darkgray;
+}
+
+
+.sub-header__footer__container {
+    transition: margin 0.3s ease-out;
+    -dyn-width        : '@selectFrom(["90%" , "80%" , "60%"])';
+    -dyn-margin-left  : '@selectFrom(["0"   , "10%" , "20%"])';
+    -dyn-margin-right : '@selectFrom(["0"   , "10%" , "20%"])';
+    display: inline-block;
+}
+
+.aligned-blocks() {
+    display: block;
+    float: left;
+    -dyn-width        : '@selectFrom(["100%", "100%", "33%"])';
+    -dyn-margin-left  : '@selectFrom(["10px" , "0px" , "0px"])';
+    -dyn-margin-right : '@selectFrom(["10px" , "0px" , "0px"])';
+    -dyn-margin-top   : '@selectFrom(["1em" , "1em" , "1em"])';
+
+}
+
+.footer__common-properties() {
+    padding-top : 4em;
+    padding-bottom: 4em;
+}
+
+a:visited, a:link {
+        color: white;
+}
+
+.sub-header__footer__madeby {
+
+    .aligned-blocks();
+    .footer__common-properties();
+    text-align: right;
+    &:before {
+        .smallcaps(white, 300);
+        content: 'made by';
+        margin-right: 1%;
+        display: block;
+    }
+
+}
+
+.sub-header__footer__license {
+    .aligned-blocks();
+    .footer__common-properties();
+    text-align: center;
+    &:before {
+        .smallcaps(white, 300);
+        content: 'license';
+        margin-right: 1%;
+        display: block;
+    }
+}
+
+.sub-header__footer__share {
+    .aligned-blocks();
+    .footer__common-properties();
+    text-align: left;
+}
+
+
+.sub-header__footer__madeby__address {
+    font-size: .7em;
+}
+
+.sub-header__footer__madeby__title {
+    .smallcaps(white, 300);
+}
+
+.sub-header__footer__share__reddit {
+    padding: 1em;
+    display: inline;
+}
+
+.sub-header__footer__share__twitter {
+    padding: 1em;
+    display: inline;
+}
+
 //      __              __     
 //     / /_  ____  ____/ /_  __
 //    / __ \/ __ \/ __  / / / /
