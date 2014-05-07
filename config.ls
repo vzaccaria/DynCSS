@@ -5,7 +5,7 @@ _module = ->
 
       # main properties 
       destination:'dist'
-      remote:'simple-login'
+      remote:'dyn-css'
 
       vendor-js:
           "./bower_components/jquery/dist/jquery.min.js"
