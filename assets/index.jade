@@ -111,10 +111,11 @@ html
 		.overlay
 
 		.toc 
-			.toc__section.toc__section--what_is_it What is it 
-			.toc__section.toc__section--features Features
-			.toc__section.toc__section--responsiveness Responsiveness
-			.toc__section.toc__section--api API
+			.toc__section.toc__section--what_is_it(onclick="location.href='#what-is-it';", style="cursor: pointer;") What is it 
+			.toc__section.toc__section--features(onclick="location.href='#features';", style="cursor: pointer;") 	Features
+			.toc__section.toc__section--responsiveness(onclick="location.href='#responsiveness';", style="cursor: pointer;") Responsiveness
+			.toc__section.toc__section--dynamic-styles(onclick="location.href='#dynamic-styles';", style="cursor: pointer;") Dynamic styles 
+			.toc__section.toc__section--api(onclick="location.href='#api';", style="cursor: pointer;") API
 
 		.header
 			.header__title
@@ -123,9 +124,8 @@ html
 			.header__sub-title Simple dynamic CSS rules to give life to your sites.
 
 			.header__buttons
-				a.header__button Download
-				a.header__button Star
-				a.header__button Docs
+				a.header__button(onclick="location.href='https://github.com/vzaccaria/DynCSS'", style="cursor: pointer") Github
+				a.header__button(onclick="location.href='#api';", style="cursor: pointer") Docs
 
 		.sub-header 
 			.sub-header__actions 
@@ -146,10 +146,12 @@ html
 						:markdown
 							```html
 							...
-							<script src='...dyncss.min.js'
+							<script src='...dyncss.js'
 															type='text/javascript' />
 							...
 							```
+							
+							Less than 20K, uncompressed and unminified. Requires only jQuery.
 
 
 				.sub-header__action
@@ -269,74 +271,86 @@ html
 						by using the breakpoints specified with `setBreakpoints`. 
 						Here, the font size will be 3em under 480px, 4em under 960px, and 5em above 960px.
 
+				#dynamic-styles.sub-header__container__short_desc
+					:markdown
+
+						# Dynamic styles 
+						DynCSS allows to add a class dynamically to all elements of a given selector, based on 
+						a condition to be evaluated at run-time; this is useful to build scroll spies.
+						You can specify the class name to be added with `-dyn-set-state-(class-name)`:
+
+						```css 
+						.to-be-highlighted {
+							-dyn-set-state-highlight: '@isVerticallyVisible("#my-section")';
+						}
+
+						```	
+						here, we add a `.highlight` class to all elements `.to-be-highlighted` whenever the function
+						`@isVerticallyVisible` returns true. We assume that `isVerticallyVisible` receives a selector 
+						and checks whether it is in or out of the viewport.
+
+						Here's a custom definition of `isVerticallyVisible` in Livescript, but you can write your own of course:
+
+						```livescript 
+
+						isVerticallyVisible = (el, threshold) ->
+							r         = jQuery(el)[0].getBoundingClientRect();
+							w         = jQuery(window)
+							vp        = {}
+							vp.top    = w.scrollTop()
+							vp.bottom = w.scrollTop() + w.height()
+							if not threshold?
+								threshold := w.height()/3
+								value = 
+								| r.top >= 0 and r.top < (threshold)   => true
+								| r.top < 0 and r.bottom > (threshold) => true
+								| otherwise                            => false
+
+							return value 						
+
+						```
+
+
 
 				#api.sub-header__container__short_desc
+
+
+
 					:markdown
 
 						# API 
 
 						Here are some built-in functions you can use in your `-dyn-css` rules:
 
-						* `shouldAppear({when: expr, isHigherThan: val})`: 
-
-							returns: 
-
-								- 0 — when `expr` is lower than 0
-								- `expr/val` — when `expr` is higher than 0 but lower than `val`
-								- 1 — when `expr` is higher than `val`
-
-							**Example**: this snippet turns up element visibility when scrolling position (`@w-scrollTop`) is
-							reaching a half of the window's height:
-
-							```css
-							.header {
-								-dyn-opacity: '@shouldAppear({when: @w-scrollTop, isHigherThan: @w-height/2})';
-							}
-							```
-
-						* `shouldDisappear({when: expr, isHigherThan: val})`
-
-							returns:  
-
-								- 1 — when `expr` is lower than 0
-								- `1-expr/val` — when `expr` is higher than 0 but lower than `val`
-								- 0 — when `expr` is higher than `val`								
-
-							**Example**: this snippet turns down opacity when scrolling position (`@w-scrollTop`) is
-							reaching a fourth of the window's height:
-
-							```css
-							.header {
-								-dyn-opacity: '@shouldDisappear({when: @w-scrollTop, isHigherThan: @w-height/4})';
-							}
-							```
-
-						You can use a `isLowerThan` value instead of `isHigherThan` in the above functions. This inverts their behavior.
-
-						* `selectFrom(array)`
-
-							Returns the element of `array` associated with the currently active breakpoint (i.e., the one with the same index).
-							Breakpoints are set by using `setBreakpoints`. 
-
-						# Other functions 
-							
-						`window.dynCss.api.setBreakpoints(array, expstring)`: sets internal breakpoints to `array`. Breakpoints are evaluated 
-						against `expstring` so, for example: 
-
-						```html
-						<script> 
-							window.dynCss.api.setBreakpoints([321],'@w-width');
-						</script>
-						```	
-						
-						sets one breakpoint at window's width equal to 320.
+					.sub-header__short_desc__api
+						+fundesc_should_appear()
+						+fundesc_should_disappear()
+						+fundesc_select_from()
 
 				
 
-		.footer 
+			.sub-header__footer 
+				.sub-header__footer__container
+					.sub-header__footer__madeby
+						a.sub-header__footer__madeby__name_lastname(href='http://www.vittoriozaccaria.net') Vittorio Zaccaria
 
-		script(type="text/javascript", src="js/vendor.js")
-		script(type="text/javascript", src="js/client.js")
+
+					a.sub-header__footer__license BSD 
+					.sub-header__footer__share 
+						.sub-header__footer__share__reddit 
+							script(type="text/javascript", src="js/vendor.js")
+							script(type="text/javascript", src="js/client.js")
+							script(type="text/javascript", src="http://www.reddit.com/static/button/button2.js")
+						.sub-header__footer__share__twitter 
+							a(href="https://twitter.com/share",class="twitter-share-button",data-count='vertical', data-via="_vzaccaria_") Tweet
+						script.
+							!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],
+							p=/^http:/.test(d.location)?'http':'https';
+							if(!d.getElementById(id)){js=d.createElement(s);js.id=id;
+							js.src=p+'://platform.twitter.com/widgets.js';
+							fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+
+
 
 		script.
 			window.dynCss.api.setBreakpoints([481,961],'@w-width');
