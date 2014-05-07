@@ -1,3 +1,98 @@
+mixin fundesc(name, use, description)
+	.api__element__name #{name}
+	.api__element__use #{use}
+	.api__element__command_desc #{description}
+
+mixin fundesc_should_appear
+	.api__element
+		+fundesc('@shouldAppear', '@shouldAppear({when: expr, isHigherThan: val})', 
+				'Returns a value that approaches 1.0 when expr approaches val.')
+
+		.api__element__returns
+			.api__element__returns__element
+				.api__element__returns__element__value 0
+				.api__element__returns__element__when`expr` is lower than 0
+
+			.api__element__returns__element
+				.api__element__returns__element__value expr/val
+				.api__element__returns__element__when`expr` is higher than 0 but lower than `val`
+
+			.api__element__returns__element
+				.api__element__returns__element__value 1
+				.api__element__returns__element__when`expr` is higher `val`
+
+		.api__element_example 
+			:markdown
+				This snippet turns up element visibility when scrolling position (`@w-scrollTop`) is
+				reaching a half of the window's height:
+
+				```css
+				.header {
+					-dyn-opacity: '@shouldAppear({when: @w-scrollTop, isHigherThan: @w-height/2})';
+				}
+				```
+		.api__element_variations 
+			:markdown 
+				Use `isLowerThan` instead of `isHigherThan`	to make elements appear on scroll up.
+	.api__hr
+
+mixin fundesc_should_disappear
+	.api__element
+		+fundesc('@shouldDisappear', '@shouldDisappear({when: expr, isHigherThan: val})', 'Returns a value that approaches 1.0 when expr approaches val.')
+
+		.api__element__returns
+			.api__element__returns__element
+				.api__element__returns__element__value 1 
+				.api__element__returns__element__when`expr` is lower than 0
+
+			.api__element__returns__element
+				.api__element__returns__element__value 1 - (expr/val)
+				.api__element__returns__element__when`expr` is higher than 0 but lower than `val`
+
+			.api__element__returns__element
+				.api__element__returns__element__value 0
+				.api__element__returns__element__when`expr` is higher `val`
+
+		.api__element_example 
+			:markdown
+				This snippet turns down opacity when scrolling position (`@w-scrollTop`) is
+				reaching a fourth of the window's height:
+
+				```css
+				.header {
+					-dyn-opacity: '@shouldDisappear({when: @w-scrollTop, isHigherThan: @w-height/4})';
+				}
+				```
+		.api__element_variations 
+			:markdown 
+				Use `isLowerThan` instead of `isHigherThan`	to make elements disappear on scroll up.
+	.api__hr
+
+mixin fundesc_select_from
+	.api__element 
+		+fundesc('@selectFrom', '@selectFrom(array)', 'Returns the element of `array` associated with the currently active breakpoint (i.e., the one with the same index).')
+
+		.api__element_example 
+			:markdown
+				Here, we set the font size to 3em under the first breakpoint, 4em under the second, and 5em above the second.
+
+				```css 
+				.header__title {
+					-dyn-font-size: '@selectFrom(["3em", "4em", "5em"])';
+				}
+				```
+
+				Breakpoints should be set in Javascript by using the appropriate `setBreakpoints` method: 
+
+
+				```html
+				<script> 
+					window.dynCss.api.setBreakpoints([321, 480],'@w-width');
+				</script>
+				```	
+				
+				sets two breakpoints at window's width (`@w-width`) equal to 320 and 480 pixels.
+
 doctype html
 html
 	head(lang="en")
