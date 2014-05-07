@@ -173,13 +173,12 @@ html
 					:markdown
 						# What is it? 
 
-						DynCSS can parse your CSS for additional `-dyn-` rules. These 
-						rules are evaluated on browser's events like `scroll` and 
-						`resize` and applied to the CSS attribute you have specified.
+						DynCSS parses your CSS for `-dyn-(attribute)` rules. These 
+						rules are Javascript expressions evaluated on browser's events like `scroll` and 
+						`resize`. The result is applied to the CSS attribute you have specified as suffix.
 
-						Rules can be defined by referring to important properties of the 
-						document that are evaluated dynamically. For example, this will 
-						center vertically `.header`, dynamically changing the position as 
+						For example, this will 
+						center vertically `.header`, dynamically changing `margin-top` as 
 						the window is resized:
 
 						```css 
@@ -193,7 +192,7 @@ html
 						header of this page has been centered in this way. 
 
 						You can even create parallax effects by using the window's `scrollTop` and dynamically
-						apply a CSS 3d transform:
+						applying a CSS transform:
 
 						```css 
 						.header {
@@ -201,19 +200,19 @@ html
 						}	
 						``` 
 
-						Since the transform value is a string, we should dynamically create one with 
-						the specific value of vertical displacement, by interpolating it with `\#{..}`. 
+						Since the `webkit-transform` value is a string, the above snippet creates one 
+						by interpolating the dynamic value with `\#{..}`. 
 
 				#features.sub-header__container__short_desc
 					:markdown
 
 						# Features 
 
-						You can transform any CSS property — provided that it is writable
-						by jQuery's `.css()` method — by appending the `-dyn-` prefix and specifying
-						a quoted javascript expression.
+						You can make dynamic any CSS property — provided that it is writable
+						by jQuery's `.css()` method. You do this by appending the `-dyn-` prefix and specifying
+						a quoted Javascript expression.
 
-						You can use placeholders to access the dynamic info of the document;
+						You can use placeholders to access dynamic information about the document;
 						here's a list of built-in placeholders you can use: 
 
 						| Prefixes | Description |
@@ -222,8 +221,8 @@ html
 						| `@i-foo` |  dynamically evaluates `$(current-selector).css(foo)` |
 						| `@j-foo` |  dynamically evaluates `$(current-selector).foo()` |
 						
-						The syntax for the rules should be relatively painless even if you use CSS preprocessors.
-						I am even using it in a `.less` file that compiles without any complaints.
+						The syntax should be parsable by any CSS preprocessor. For 
+						example, I am using it with `lessc` for this website.
 
 						# Custom functions 
 						You can introduce custom functions to be evaluated at run-time,  by
@@ -287,7 +286,7 @@ html
 						```	
 						here, we add a `.highlight` class to all elements `.to-be-highlighted` whenever the function
 						`@isVerticallyVisible` returns true. We assume that `isVerticallyVisible` receives a selector 
-						and checks whether it is in or out of the viewport.
+						and checks whether it is in or out of the view port.
 
 						Here's a custom definition of `isVerticallyVisible` in Livescript, but you can write your own of course:
 
@@ -320,7 +319,7 @@ html
 
 						# API 
 
-						Here are some built-in functions you can use in your `-dyn-css` rules:
+						Here are some built-in functions you can use in your `-dyn-*` rules:
 
 					.sub-header__short_desc__api
 						+fundesc_should_appear()
