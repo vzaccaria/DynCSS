@@ -32,3 +32,5 @@ dist/html/index.html
 dist/index.html
 
 dist/js/client.js
+
+lib/dyncss.js
