@@ -1,5 +1,5 @@
 {
-    "name": "DynCSS",
+    "name": "dyn-css",
     "version": "0.5.0",
     "homepage": "https://github.com/vzaccaria/DynCSS",
     "authors": [
@@ -13,7 +13,7 @@
         "rules"
     ],
     "license": "MIT",
-    "private": true,
+    "private": false,
     "ignore": [
         "**/.*",
         "assets",
