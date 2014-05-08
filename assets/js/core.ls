@@ -1,7 +1,6 @@
+built-in = require('./lib')
 
-css-parse = require('css-parse')
-
-dyn-css = (window-di, document-di) ->
+dyn-css = (window-di, document-di, jq-di) ->
 
     inner-module = ->
       # Use `inner-module` to inject dependencies into `dep`
@@ -9,7 +8,7 @@ dyn-css = (window-di, document-di) ->
       #
       # You can access `dep` method with plain `dep.method`
       # in functions defined below.
-      return root
+      return this 
 
 
     window-di.dynCss      = {}
@@ -28,7 +27,7 @@ dyn-css = (window-di, document-di) ->
 
         (@name, @breakpoints, @expression) ->
             @expression = transcompile-function @expression
-            @compiled = create-function @expression 
+            @compiled = window-di.dynCss.api.create-function @expression 
 
     set-named-breakpoints = (name, list, expression) ->
             window-di.dynCss.data[name] = new breakpoint(name, list, expression)
@@ -41,7 +40,7 @@ dyn-css = (window-di, document-di) ->
         set-named-breakpoints:      set-named-breakpoints 
     }
 
-    debug = true
+    debug = false
 
     #                           
     #       _________  ________ 
@@ -57,8 +56,6 @@ dyn-css = (window-di, document-di) ->
                 | otherwise => ""
 
 
-    scroll-handlers = {}
-
     get-scroll-expression = (d) ->
         if (results = d.property is /\-dyn\-(.*)/)?
             property = results[1]
@@ -67,16 +64,16 @@ dyn-css = (window-di, document-di) ->
         return undefined
 
     transcompile-function = (body) ->
-        body   = body.replace(/@a-(\w+){(.+)}/g , 'jQuery(\'$2\').$1()')
-        body   = body.replace(/@p-(\w+){(.+)}/g , 'jQuery(\'$2\').position().$1')
+        body   = body.replace(/@a-(\w+){(.+)}/g , 'this.lib.jqRef(\'$2\').$1()')
+        body   = body.replace(/@p-(\w+){(.+)}/g , 'this.lib.jqRef(\'$2\').position().$1')
         body   = body.replace(/\#{(.+)}/g       , '"+($1)+"')
         body   = body.replace(/@i-(\w+)/g       , 'parseInt(this.el.css(\'$1\'))')
-        body   = body.replace(/@j-(\w+)/g       , 'jQuery(this.el).$1()')
+        body   = body.replace(/@j-(\w+)/g       , 'this.lib.jqRef(this.el).$1()')
         body   = body.replace(/@w-(\w+)/g       , '(this.lib.wRef.$1())')
         body   = body.replace(/@/g              , 'this.lib.')
         return body        
 
-    create-function = (body) ->
+    window-di.dynCss.api.create-function = (body) ->
 
         script = document-di.createElement("script")
         script.text = "window.tmp = function() { return (#body); }.bind(window.dynCss);"
@@ -87,7 +84,8 @@ dyn-css = (window-di, document-di) ->
 
     build-handlers = (rules, refresh-handler) ->
 
-      window-di.dynCss.lib.wRef = jQuery(window-di)
+      window-di.dynCss.lib.jqRef = jq-di
+      window-di.dynCss.lib.wRef  = jq-di(window-di)
 
 
       for rule in rules 
@@ -98,21 +96,20 @@ dyn-css = (window-di, document-di) ->
 
             for decl in rule.declarations 
                 result = get-scroll-expression(decl)
-
+                
                 if result?
 
                     { property, expression, trigger} = result 
                     comp    = transcompile-function expression
-                    handler = create-function comp
-
+                    handler = window-di.dynCss.api.create-function comp
                     actions.push { property: camelize(property), original-property: property, funct: handler, sel: sel }
 
             wrapper = (next) ->
                 let act = actions, scoped-sel=sel
                     (e) -> 
                         for sct in scoped-sel
-                            jQuery(sct).each (i) ->
-                                window-di.dynCss.el = jQuery(this)
+                            jq-di(sct).each (i) ->
+                                window-di.dynCss.el = jq-di(this)
                                 css = {} 
                                 for a in act 
                                     if (r = (a.original-property == /set-state-(.+)/))
@@ -138,84 +135,4 @@ dyn-css = (window-di, document-di) ->
         build-handlers: build-handlers
     }
 
-{ build-handlers } = dyn-css(window, document)
-
-#         __                    ____              
-#        / /_  ____ _____  ____/ / /__  __________
-#       / __ \/ __ `/ __ \/ __  / / _ \/ ___/ ___/
-#      / / / / /_/ / / / / /_/ / /  __/ /  (__  ) 
-#     /_/ /_/\__,_/_/ /_/\__,_/_/\___/_/  /____/  
-#                                                 
-
-refresh-handler = undefined
-decimate        = 1
-iOS             = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
-counter         = 0
-lt              = 0
-fixed-ttc       = (1000/1)
-
-install-custom-raf = ->
-    window.customRAF = (cb) ->
-        ct = new Date().getTime()
-        ttc = Math.max(0, 16 - (ct - lt))
-        if fixed-ttc? 
-            set-timeout cb, fixed-ttc, true
-        else 
-            set-timeout cb, ttc, true
-
-        lt := ct + ttc
-
-install-custom-raf-handler = ->
-    install-custom-raf()
-    wrapped-handler = ->
-        customRAF wrapped-handler 
-        refresh-handler()
-
-    customRAF(wrapped-handler)
-    refresh-handler()
-
-install-raf-handler = ->
-            wrapped-handler = ->
-                request-animation-frame wrapped-handler 
-                refresh-handler()
-
-            request-animation-frame(wrapped-handler)
-
-install-scroll-handler = (options) ->
-            scroll-handler = ->
-                if (counter % decimate) == 0
-                    refresh-handler()
-                counter := counter + 1
-
-            if not options?.only-on-resize?
-                window.onscroll     = scroll-handler
-                window.ontouchmove  = scroll-handler
-
-            window.onresize     = scroll-handler
-            scroll-handler()
-
-#                         _                     __            
-#        ____ ___  ____ _(_)___     ___  ____  / /________  __
-#       / __ `__ \/ __ `/ / __ \   / _ \/ __ \/ __/ ___/ / / /
-#      / / / / / / /_/ / / / / /  /  __/ / / / /_/ /  / /_/ / 
-#     /_/ /_/ /_/\__,_/_/_/ /_/   \___/_/ /_/\__/_/   \__, /  
-#                                                    /____/   
-
-$('link[type="text/css"]').each (i,n) ->
-    if n.href?
-        $.get n.href, ->
-            rules = css-parse(it).stylesheet.rules
-            refresh-handler := build-handlers(rules, refresh-handler)
-            if refresh-handler?
-                if iOS
-                    install-scroll-handler({+only-on-resize})
-                else 
-                    install-scroll-handler()
-            
-
-            # window.onscroll = refresh-handler
-            # window.onresize = refresh-handler 
-            # refresh-handler()
-
-
-
+module.exports = dyn-css
