@@ -104,8 +104,8 @@ html
 		// if lt IE 9
 			script(type="text/javascript", src="js/html5shiv.js")
 		link(href="//netdna.bootstrapcdn.com/font-awesome/4.0.3/css/font-awesome.css", rel="stylesheet")
-		link(rel="stylesheet", type="text/css", href="//highlightjs.org/static/styles/obsidian.css")
 		link(rel="stylesheet", href="css/client.css", type="text/css")
+		link(rel="stylesheet", href="css/vendor.css", type="text/css")
 	body
 		//- BEM Rules.
 		.overlay
@@ -336,20 +336,15 @@ html
 
 					a.sub-header__footer__license BSD 
 					.sub-header__footer__share 
-						.sub-header__footer__share__reddit 
-							script(type="text/javascript", src="js/vendor.js")
-							script(type="text/javascript", src="js/client.js")
-							script(type="text/javascript", src="http://www.reddit.com/static/button/button2.js")
+						#here-reddit.sub-header__footer__share__reddit 
+
 						.sub-header__footer__share__twitter 
-							a(href="https://twitter.com/share",class="twitter-share-button",data-count='vertical', data-via="_vzaccaria_") Tweet
-						script.
-							!function(d,s,id){var js,fjs=d.getElementsByTagName(s)[0],
-							p=/^http:/.test(d.location)?'http':'https';
-							if(!d.getElementById(id)){js=d.createElement(s);js.id=id;
-							js.src=p+'://platform.twitter.com/widgets.js';
-							fjs.parentNode.insertBefore(js,fjs);}}(document, 'script', 'twitter-wjs');
+							a#here-twitter(href="https://twitter.com/share",class="twitter-share-button",data-count='vertical', data-via="_vzaccaria_") Tweet
+						
 
 
+		script(type="text/javascript", src="js/vendor.js")
+		script(type="text/javascript", src="js/client.js")
 
 		script.
 			window.dynCss.api.setBreakpoints([481,961],'@w-width');
@@ -357,6 +352,8 @@ html
 		script(src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js')
 		script.
 			hljs.initHighlightingOnLoad();                                      
-   
+
+
+
 		// if IE
 			script(type="text/javascript", src="js/placeholder.js")
