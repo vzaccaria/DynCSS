@@ -38,7 +38,7 @@ mixin fundesc_should_appear
 
 mixin fundesc_should_disappear
 	.api__element
-		+fundesc('@shouldDisappear', '@shouldDisappear({when: expr, isHigherThan: val})', 'Returns a value that approaches 1.0 when expr approaches val.')
+		+fundesc('@shouldDisappear', '@shouldDisappear({when: expr, isHigherThan: val})', 'Returns a value that approaches 0.0 when expr approaches val.')
 
 		.api__element__returns
 			.api__element__returns__element
@@ -96,7 +96,7 @@ mixin fundesc_select_from
 doctype html
 html
 	head(lang="en")
-		title A simple login 
+		title DynCSS - Simple dynamic CSS rules to give life to your sites.
 		meta(http-equiv="content-type", content="text/html, charset=UTF-8")
 		meta(name="description", content="")
 		meta(name="keywords", content="")
@@ -121,7 +121,7 @@ html
 			.header__title
 				strong Dyn
 				|CSS
-			.header__sub-title Simple dynamic CSS rules to give life to your sites.
+			.header__sub-title Simple, dynamic CSS rules to give life to your sites.
 
 			.header__buttons
 				a.header__button(onclick="location.href='https://github.com/vzaccaria/DynCSS'", style="cursor: pointer") Github
