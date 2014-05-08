@@ -84,7 +84,7 @@ gulp.task 'build-client-ls', ->
         .pipe live()
         .pipe gulp.dest "#destination/js/build"
 
-gulp.task 'build-vendor-js-prod', ->
+gulp.task 'build-vendor-js-prod', ['build-client-js'],->
     gulp.src vendor-js
         .pipe(concat('vendor.js'))
         .pipe filesize()
@@ -94,7 +94,7 @@ gulp.task 'build-vendor-js-prod', ->
         .pipe filesize()
         .pipe gulp.dest "#destination/js"
 
-gulp.task 'build-vendor-js', ->
+gulp.task 'build-vendor-js', ['build-client-js'], ->
     gulp.src vendor-js
         .pipe(concat('vendor.js'))
         .pipe gulp.dest "#destination/js"
@@ -184,8 +184,8 @@ gulp.task 'copy-data', ->
   
 gulp.task 'default', [
     \build-index
-    \build-vendor-js
     \build-client-js
+    \build-vendor-js
     \build-vendor-css
     \build-css
     \build-fonts
@@ -197,8 +197,8 @@ gulp.task 'default', [
 
 gulp.task 'production', [
     \build-index
-    \build-vendor-js-prod
     \build-client-js
+    \build-vendor-js-prod
     \build-vendor-css
     \build-css
     \build-fonts
@@ -214,4 +214,4 @@ gulp.task 'dev', (done) ->
     runSequence 'build-clean', 'default', 'watch-build', done
 
 gulp.task 'deploy', (done) ->
-    runSequence 'build-clean', 'production', 'ftp'
+    runSequence 'build-clean', 'default', 'ftp'

@@ -24,5 +24,5 @@ add-twitter-button = (selector) ->
 $(document).ready ->
     add-reddit-button('#here-reddit')
     add-twitter-button('#here-twitter')
-
+    $('body').fadeTo(1000, 1.0)
 
