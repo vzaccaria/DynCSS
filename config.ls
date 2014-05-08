@@ -9,6 +9,7 @@ _module = ->
 
       vendor-js:
           "./bower_components/jquery/dist/jquery.min.js"
+          "./dist/js/build/site.js"
           ...
 
       # client files 
@@ -33,7 +34,7 @@ _module = ->
 
       # vendor files 
       vendor-css:
-          './vendor/css/*.css'
+          './assets/css/*.css'
           ...
 
       # other assets
