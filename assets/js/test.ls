@@ -175,7 +175,7 @@ describe 'DynCSS tests - using built-in', (empty) ->
               selectors: ['.test']
               declarations: [
                 * property: '-dyn-width'
-                  value: quote('@w-width')
+                  value: quote('@win-width')
               ]
 
         ]
@@ -208,7 +208,7 @@ describe 'DynCSS tests - using built-in', (empty) ->
               selectors: ['.test']
               declarations: [
                 * property: '-dyn-width'
-                  value: quote('@j-width')
+                  value: quote('@jq-width')
               ]
 
         ]
@@ -231,7 +231,7 @@ describe 'DynCSS tests - using built-in', (empty) ->
               selectors: ['.test']
               declarations: [
                 * property: '-dyn-width'
-                  value: quote('@i-size')
+                  value: quote('@el-size')
               ]
 
         ]

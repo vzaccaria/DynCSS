@@ -70,6 +70,9 @@ dyn-css = (window-di, document-di, jq-di) ->
         body   = body.replace(/@i-(\w+)/g       , 'parseInt(this.el.css(\'$1\'))')
         body   = body.replace(/@j-(\w+)/g       , 'this.lib.jqRef(this.el).$1()')
         body   = body.replace(/@w-(\w+)/g       , '(this.lib.wRef.$1())')
+        body   = body.replace(/@el-(\w+)/g      , 'parseInt(this.el.css(\'$1\'))')
+        body   = body.replace(/@jq-(\w+)/g      , 'this.lib.jqRef(this.el).$1()')
+        body   = body.replace(/@win-(\w+)/g     , '(this.lib.wRef.$1())')
         body   = body.replace(/@/g              , 'this.lib.')
         return body        
 

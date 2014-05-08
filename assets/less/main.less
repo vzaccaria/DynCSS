@@ -55,10 +55,10 @@ code {
 
 .header {
     width            : 70%;
-    -dyn-transform   : '"translate( 0px , #{-1*@w-scrollTop}px) "';
-    -dyn-margin-top  : '(@w-height - @i-height)/2.0';
-    -dyn-margin-left : '(@w-width -  @i-width)/2.0';
-    -dyn-opacity     : '@shouldDisappear({when: @w-scrollTop, isHigherThan: @w-height/4})';
+    -dyn-transform   : '"translate( 0px , #{-1*@win-scrollTop}px) "';
+    -dyn-margin-top  : '(@win-height - @el-height)/2.0';
+    -dyn-margin-left : '(@win-width -  @el-width)/2.0';
+    -dyn-opacity     : '@shouldDisappear({when: @win-scrollTop, isHigherThan: @win-height/4})';
     
 }
 
@@ -101,7 +101,7 @@ code {
 
 .sub-header {
     position   : absolute;
-    -dyn-top   : '(@w-height)';
+    -dyn-top   : '(@win-height)';
     background : white;
     width      : 100%;
     box-sizing : border-box;
@@ -142,7 +142,7 @@ code {
 }
 
 .sub-header__action__icon.fa.fa-gamepad {
-    -dyn-transform:   '"rotate(#{@w-scrollTop}deg) "';
+    -dyn-transform:   '"rotate(#{@win-scrollTop}deg) "';
 }
 
 .sub-header__action__text {
@@ -248,7 +248,7 @@ hr.sub-header__container__separator {
 
 .toc {
     position         : fixed;
-    -dyn-opacity     : '@shouldAppear({when : @w-scrollTop, isHigherThan : @w-height/4}) - 0.3';
+    -dyn-opacity     : '@shouldAppear({when : @win-scrollTop, isHigherThan : @win-height/4}) - 0.3';
     -dyn-display     : '@selectFrom(["none"  , "none"  , "block"])';
     left             : 0px;
     z-index          : +1;
@@ -512,5 +512,5 @@ body {
     background      : url(../img/silhouette_dune_desktop.jpg) no-repeat center center;
     background-size : cover;
     margin          : 0px;
-    -dyn-height     : '@w-height';
+    -dyn-height     : '@win-height';
 }

@@ -23,12 +23,12 @@ mixin fundesc_should_appear
 
 		.api__element_example 
 			:markdown
-				This snippet turns up element visibility when scrolling position (`@w-scrollTop`) is
+				This snippet turns up element visibility when scrolling position (`@win-scrollTop`) is
 				reaching a half of the window's height:
 
 				```css
 				.header {
-					-dyn-opacity: '@shouldAppear({when: @w-scrollTop, isHigherThan: @w-height/2})';
+					-dyn-opacity: '@shouldAppear({when: @win-scrollTop, isHigherThan: @win-height/2})';
 				}
 				```
 		.api__element_variations 
@@ -55,12 +55,12 @@ mixin fundesc_should_disappear
 
 		.api__element_example 
 			:markdown
-				This snippet turns down opacity when scrolling position (`@w-scrollTop`) is
+				This snippet turns down opacity when scrolling position (`@win-scrollTop`) is
 				reaching a fourth of the window's height:
 
 				```css
 				.header {
-					-dyn-opacity: '@shouldDisappear({when: @w-scrollTop, isHigherThan: @w-height/4})';
+					-dyn-opacity: '@shouldDisappear({when: @win-scrollTop, isHigherThan: @win-height/4})';
 				}
 				```
 		.api__element_variations 
@@ -87,11 +87,11 @@ mixin fundesc_select_from
 
 				```html
 				<script> 
-					window.dynCss.api.setBreakpoints([321, 480],'@w-width');
+					window.dynCss.api.setBreakpoints([321, 480],'@win-width');
 				</script>
 				```	
 				
-				sets two breakpoints at window's width (`@w-width`) equal to 320 and 480 pixels.
+				sets two breakpoints at window's width (`@win-width`) equal to 320 and 480 pixels.
 
 doctype html
 html
@@ -162,7 +162,7 @@ html
 							```css
 							i.fa.fa-gamepad {
 									-dyn-webkit-transform:   
-												'"rotate(\#{@w-scrollTop}deg) "';
+												'"rotate(\#{@win-scrollTop}deg) "';
 							}
 							```
 
@@ -183,12 +183,12 @@ html
 
 						```css 
 						.header {
-							-dyn-margin-top: '(@w-height - @i-height)/2.0';
+							-dyn-margin-top: '(@win-height - @el-height)/2.0';
 						}
 						```
 
-						Here, `@w-height` is the dynamic height of the window and 
-						`@i-height` is the dynamic height of the current element (`.header` in this case). The 
+						Here, `@win-height` is the dynamic height of the window and 
+						`@el-height` is the dynamic height of the current element (`.header` in this case). The 
 						header of this page has been centered in this way. 
 
 						You can even create parallax effects by using the window's `scrollTop` and dynamically
@@ -196,7 +196,7 @@ html
 
 						```css 
 						.header {
-							-dyn-webkit-transform:   '"translate( 0px , \#{-1*@w-scrollTop}px) "';
+							-dyn-webkit-transform:   '"translate( 0px , \#{-1*@win-scrollTop}px) "';
 						}	
 						``` 
 
@@ -217,9 +217,9 @@ html
 
 						| Prefixes | Description |
 						|---|---|
-						| `@w-foo` |  dynamically evaluates `window.foo()`|
-						| `@i-foo` |  dynamically evaluates `$(current-selector).css(foo)` |
-						| `@j-foo` |  dynamically evaluates `$(current-selector).foo()` |
+						| `@win-foo` |  dynamically evaluates `window.foo()`|
+						| `@el-foo` |  dynamically evaluates `$(current-selector).css(foo)` |
+						| `@jq-foo` |  dynamically evaluates `$(current-selector).foo()` |
 						
 						The syntax should be parsable by any CSS preprocessor. For 
 						example, I am using it with `lessc` for this website.
@@ -249,11 +249,11 @@ html
 						To do so you define a list of breakpoints and 
 						the dynamic variable to watch (which is typically the size of the window). You can do this in a `<script>` tag 
 						in your HTML; here's how you set two breakpoints at 481 and 961 on the window's width 
-						variable `@w-width`:
+						variable `@win-width`:
 
 						```html
 						<script> 
-							window.dynCss.api.setBreakpoints([481,961],'@w-width');
+							window.dynCss.api.setBreakpoints([481,961],'@win-width');
 						</script>
 						```
 
@@ -347,7 +347,7 @@ html
 		script(type="text/javascript", src="js/client.js")
 
 		script.
-			window.dynCss.api.setBreakpoints([481,961],'@w-width');
+			window.dynCss.api.setBreakpoints([481,961],'@win-width');
 
 		script(src='//cdnjs.cloudflare.com/ajax/libs/highlight.js/8.0/highlight.min.js')
 		script.
