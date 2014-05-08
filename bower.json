@@ -1,32 +1,32 @@
 {
-    "name": "dyn-css",
-    "version": "0.6.0",
-    "homepage": "https://github.com/vzaccaria/DynCSS",
-    "authors": [
-        "Vittorio Zaccaria <vittorio.zaccaria@gmail.com>"
-    ],
-    "description": "Dynamic rules for css",
-    "main": "lib/dyncss.js",
-    "keywords": [
-        "dynamic",
-        "css",
-        "rules"
-    ],
-    "license": "MIT",
-    "private": false,
-    "ignore": [
-        "**/.*",
-        "assets",
-        "bower.json",
-        "bower_components",
-        "config.ls",
-        "dist",
-        "gulpfile.ls",
-        "node_modules",
-        "package.json",
-        "vendor"
-    ],
-    "dependencies": {
-        "jquery": "~2.1.0"
-    }
+  "name": "dyn-css",
+  "version": "0.6.1",
+  "homepage": "https://github.com/vzaccaria/DynCSS",
+  "authors": [
+    "Vittorio Zaccaria <vittorio.zaccaria@gmail.com>"
+  ],
+  "description": "Dynamic rules for css",
+  "main": "lib/dyncss.js",
+  "keywords": [
+    "dynamic",
+    "css",
+    "rules"
+  ],
+  "license": "MIT",
+  "private": false,
+  "ignore": [
+    "**/.*",
+    "assets",
+    "bower.json",
+    "bower_components",
+    "config.ls",
+    "dist",
+    "gulpfile.ls",
+    "node_modules",
+    "package.json",
+    "vendor"
+  ],
+  "dependencies": {
+    "jquery": "~2.1.0"
+  }
 }
