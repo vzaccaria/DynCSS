@@ -161,6 +161,7 @@ code {
 .sub-header__action__desc pre {
     text-align        : left;
     white-space       : pre-wrap;
+    word-wrap         : break-word;
     -dyn-padding      : '@selectFrom(["0" , "2em" , "2em"])';
     -dyn-margin-left  : '@selectFrom(["0%" , "0%" , "1%"])';
     -dyn-margin-right : '@selectFrom(["0%" , "0%" , "1%"])';
@@ -200,7 +201,7 @@ hr.sub-header__container__separator {
 
 .sub-header__container__short_desc {
 
-    padding        : 1em;
+    padding        : 5%;
     line-height    : 1.5em;
     font-size      : 1.2em;
     margin-left    : auto;
@@ -217,14 +218,16 @@ hr.sub-header__container__separator {
     }
 
     & pre {
-        text-align        : left;
-        white-space       : pre-wrap;
+        text-align  : left;
+        white-space : pre-wrap;
+        word-wrap   : break-word;
+        background-color: red;
     }
 
     & > table {
+        box-size         : border-box;
         width            : 100%;
         background-color : darken(white, 5%);
-        padding          : 2em;
         & th {
             min-width  : 15%;
             text-align : left;
@@ -511,5 +514,6 @@ body {
     background      : url(../img/silhouette_dune_desktop.jpg) no-repeat center center;
     background-size : cover;
     margin          : 0px;
+    -dyn-width      : '@win-width';
     -dyn-height     : '@win-height';
 }
