@@ -127,9 +127,11 @@ phase "Copying the library"
 run 'cp dist/js/client.js lib/dyncss.js'
 
 phase "Testing the library"
-cd assets/js && make
+run "cd assets/js && make"
 
+run "cd $dstdir"
 phase "Adding the library to the repo"
+run "git status"
 run "git add lib/dyncss.js"
 
 phase "Updating bower package"
