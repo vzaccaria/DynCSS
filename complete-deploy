@@ -1,0 +1,164 @@
+#!/usr/bin/env sh 
+set -e
+
+usage="
+Usage: complete-deploy
+
+description
+
+-i --increment <level>
+        Specify the level of the current version number to increment.
+        Valid levels are 'major', 'minor', 'patch', and 'prerelease'.
+        'patch' is assumed if this option is omitted.
+
+-d --dry-run
+        Print the commands without evaluating them.
+"
+
+# Absolute path:
+# 
+# Usage: abs=`get_abs_path ./deploy/static`
+#		 echo $abs
+# 
+function get_abs_path {
+   dir=$(cd `dirname $1` >/dev/null; pwd )
+   echo $dir
+}
+#
+
+# Get basename:
+function get_base_name {
+	n=$1
+	n=$(basename "$n")
+	echo "${n%.*}"
+}
+
+
+#if [ $? -eq 0 ]
+#then
+#    echo "it worked"
+#else
+#    echo "it failed"
+#fi
+
+# Source directory
+#
+srcdir=`dirname $0`
+srcdir=`cd $srcdir; pwd`
+
+#
+# Temp directory:
+#
+# dstdir=`mktemp -d -t bashtmp`
+#
+# or current:
+#
+dstdir=`pwd`
+
+function directory_does_exist {
+	if [ ! -d "$1" ]; then
+		echo 'true'
+	else
+		echo 'false'
+	fi
+}
+
+bold=$(tput bold)
+reset=$(tput sgr0)
+function print_important_message {
+	printf "${bold}$1${reset}\n"
+}
+
+function ask_for_key {
+	printf "Press [enter] to continue"
+	read -s # suppress user input
+	echo 
+}
+
+
+# dryrun
+dry_run=false
+run() {
+  echo "$1"
+  if [[ $dry_run == false ]] ; then
+    eval "$1"
+  fi
+}
+
+increment=patch
+branch=master
+
+
+while (($# > 0)) ; do
+  option="$1"
+  shift
+
+  case "$option" in
+    -h|--help)
+      echo "$usage"
+      exit
+      ;;
+    -i|--increment)    increment="$1"        ; shift ;;
+    -d|--dry-run)      dry_run=true        ;;
+    *)
+      echo "Unrecognized option $option" >&2
+      exit 1
+  esac
+done
+
+function phase {
+	printf "\n"
+	printf "\n"
+	printf "# \n"
+	printf "# $1 \n"
+}
+
+print_important_message "This will commit both the site and a new version of the package"
+print_important_message "Make sure you've committed all changes to master"
+ask_for_key
+
+phase "Building the library"
+cult build-clean
+cult default
+rm -rf lib
+mkdir -p lib 
+
+phase "Copying the library"
+run 'cp dist/js/client.js lib/dyncss.js'
+
+phase "Testing the library"
+cd assets/js && make
+
+phase "Adding the library to the repo"
+run "git add lib/dyncss.js"
+
+phase "Updating bower package"
+name=$(node -p "require('$dstdir/bower.json').name" 2>/dev/null) ||
+  (echo "Cannot read package name" >&2 ; exit 1)
+
+print_important_message "Current package is: $name"
+version=$(node -p "require('$dstdir/bower.json').version" 2>/dev/null) ||
+  (echo "Cannot read package version " >&2 ; exit 1)
+
+print_important_message "Current package version is: $version"
+next_version=$("semver" -i "$increment" "$version") 
+
+
+message_template='Version X.Y.Z'
+tag_template=vX.Y.Z
+message="${message_template//X.Y.Z/$next_version}"
+tag="${tag_template//X.Y.Z/$next_version}"
+
+
+run "node -e '$(echo "
+  var o = require('$dstdir/bower.json');
+  o.version = '$next_version';
+  var s = JSON.stringify(o, null, 2) + '\n';
+  require('fs').writeFileSync('$dstdir/bower.json', s);
+" | tr "'" '"' | tr -d "\n" | sed "s/^[ ]*//" | tr -s " ")'"
+
+phase "Committing bower package"
+run "git add bower.json"
+run "git commit --message '$message'"
+run "git tag --annotate '$tag' --message '$message'"
+run "git push origin 'refs/heads/$branch' 'refs/tags/$tag'"
