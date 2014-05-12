@@ -1,6 +1,27 @@
 #!/usr/bin/env sh 
 set -e
 
+
+function build_package {
+  phase "Building the library"
+  cult build-clean
+  cult default
+  rm -rf lib
+  mkdir -p lib 
+  
+  phase "Copying the library"
+  run 'cp dist/js/client.js lib/dyncss.js'
+  
+  phase "Testing the library"
+  run "cd assets/js && make"
+}
+
+function add_package_to_repo {
+  run "cd $dstdir"
+  phase "Adding the library to the repo"
+  run "git add lib/dyncss.js"
+}
+
 usage="
 Usage: complete-deploy
 
@@ -117,22 +138,9 @@ print_important_message "This will commit both the site and a new version of the
 print_important_message "Make sure you've committed all changes to master"
 ask_for_key
 
-phase "Building the library"
-cult build-clean
-cult default
-rm -rf lib
-mkdir -p lib 
+build_package
 
-phase "Copying the library"
-run 'cp dist/js/client.js lib/dyncss.js'
-
-phase "Testing the library"
-run "cd assets/js && make"
-
-run "cd $dstdir"
-phase "Adding the library to the repo"
-run "git status"
-run "git add lib/dyncss.js"
+add_package_to_repo
 
 phase "Updating bower package"
 name=$(node -p "require('$dstdir/bower.json').name" 2>/dev/null) ||

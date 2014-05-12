@@ -122,6 +122,7 @@ dyn-css = (window-di, document-di, jq-di) ->
                                         else 
                                             window-di.dynCss.el.removeClass(cc)
                                     else 
+                                        console.log "Assigning #{sct}.#{a.property} <= #{a.funct()}" if debug
                                         css[a.property] = a.funct()
 
                                 window-di.dynCss.el.css(css)
