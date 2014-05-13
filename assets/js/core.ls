@@ -60,10 +60,33 @@ dyn-css = (window-di, document-di, jq-di) ->
         if (results = d.property is /\-dyn\-(.*)/)?
             property = results[1]
             if (results = d.value is /'(.*)'/)?
-                return { property: property, expression: results[1] }
+                expression = results[1]
+
+                if property == 'right-side'
+
+                    property   = 'left'
+                    expression = "#expression - @el-width"
+
+                if property == 'bottom-side'
+
+                    property   = 'top'
+                    expression = "#expression - @el-height"
+
+                if property == 'h-center'
+
+                    property   = 'left'
+                    expression = "#expression - @el-width/2"
+
+                if property == 'v-center'
+
+                    property   = 'top'
+                    expression = "#expression - @el-height/2"
+
+                return { property: property, expression: expression }
         return undefined
 
     transcompile-function = (body) ->
+        console.log body if debug
         body   = body.replace(/@a-(\w+){(.+)}/g , 'this.lib.jqRef(\'$2\').$1()')
         body   = body.replace(/@p-(\w+){(.+)}/g , 'this.lib.jqRef(\'$2\').position().$1')
         body   = body.replace(/\#{(.+)}/g       , '"+($1)+"')
@@ -99,7 +122,6 @@ dyn-css = (window-di, document-di, jq-di) ->
 
             for decl in rule.declarations 
                 result = get-scroll-expression(decl)
-                
                 if result?
 
                     { property, expression, trigger} = result 
