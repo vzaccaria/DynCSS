@@ -25,6 +25,28 @@ shouldDisappear = (context) ->
         v = sat(wn `as-percentage-of` is-lower-than)
         return v
 
+transitionToOne = (context, power = 1) ->
+    var int 
+    var vv
+    var direction
+
+    { start, stop } = context
+    val             = context['when']
+    orig = val
+
+    pp = 
+        | start<stop and val<start => 0
+        | start<stop and val>stop  => 1
+        | start<stop => (val - start) / (stop - start)
+        | start>stop and val>start => 1
+        | start>stop and val<stop  => 0
+        | start>stop => 1 - (val-stop) / (start - stop)
+
+    vv = sat(pp)
+    vv = Math.pow(vv, power)
+    return vv
+
+
 shouldAppear = (context) ->
     { is-higher-than, is-lower-than } = context
     wn = context['when']
@@ -142,6 +164,11 @@ _module = ->
 
         fixed-vertical-center: ->
             (top-of(it) + bottom-of(it))/2
+
+        morph: (c, v1, v2) ->
+            vv = v1*(1-c) + v2*c
+            return vv
+
 
         shouldBeVisible: ->
             $w-top    = $(window).scrollTop()
