@@ -117,20 +117,30 @@ _module = ->
           
     iface = {
         shouldDisappear     : shouldDisappear
+        convergeToZero      : shouldDisappear
         shouldAppear        : shouldAppear
+        convergeToOne       : shouldAppear
+
+        transitionToOne     : transitionToOne
+
         perspective         : perspective
         selectFrom          : selectFrom
         isVerticallyVisible : isVerticallyVisible
         if                  : ifThenElse
-        top-side            : top-of
-        bottom-side         : bottom-of
-        right-side          : right-of
-        left-side           : left-of
 
-        h-center: ->
+        fixed-top-edge      : top-of
+        fixed-bottom-edge   : bottom-of
+        fixed-right-edge    : right-of
+        fixed-left-edge     : left-of
+
+        pos: (el) ->
+            $(el).offset()
+
+
+        fixed-horizontal-center: ->
             (right-of(it) + left-of(it))/2
 
-        v-center: ->
+        fixed-vertical-center: ->
             (top-of(it) + bottom-of(it))/2
 
         shouldBeVisible: ->

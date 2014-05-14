@@ -62,22 +62,32 @@ dyn-css = (window-di, document-di, jq-di) ->
             if (results = d.value is /'(.*)'/)?
                 expression = results[1]
 
-                if property == 'right-side'
+                if property == 'fixed-right-edge'
 
                     property   = 'left'
                     expression = "#expression - @el-width"
 
-                if property == 'bottom-side'
+                if property == 'fixed-left-edge'
+
+                    property   = 'left'
+                    expression = "#expression"
+
+                if property == 'fixed-bottom-edge'
 
                     property   = 'top'
                     expression = "#expression - @el-height"
 
-                if property == 'h-center'
+                if property == 'fixed-top-edge'
+
+                    property   = 'top'
+                    expression = "#expression"
+
+                if property == 'fixed-horizontal-center'
 
                     property   = 'left'
                     expression = "#expression - @el-width/2"
 
-                if property == 'v-center'
+                if property == 'fixed-vertical-center'
 
                     property   = 'top'
                     expression = "#expression - @el-height/2"
