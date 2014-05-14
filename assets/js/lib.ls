@@ -87,13 +87,13 @@ isVerticallyVisible = (el, threshold) ->
 
 top-of = (el) ->
     if el != window
-        jQuery(el).offset().top 
+        jQuery(el).offset().top - $(window).scrollTop()
     else 
         0
 
 bottom-of = (el) ->
     if el != window
-        jQuery(el).offset().top + parseInt(jQuery(el).css('margin-bottom')) + jQuery(el).innerHeight()
+        jQuery(el).offset().top - $(window).scrollTop() + parseInt(jQuery(el).css('margin-bottom')) + jQuery(el).innerHeight()
     else 
         $(window).height()
 
