@@ -98,7 +98,6 @@ dyn-css = (window-di, document-di, jq-di) ->
     transcompile-function = (body) ->
         console.log body if debug
         body   = body.replace(/@a-(\w+){(.+)}/g , 'this.lib.jqRef(\'$2\').$1()')
-        body   = body.replace(/@p-(\w+){(.+)}/g , 'this.lib.jqRef(\'$2\').position().$1')
         body   = body.replace(/\#{(.+)}/g       , '"+($1)+"')
         body   = body.replace(/@i-(\w+)/g       , 'parseInt(this.el.css(\'$1\'))')
         body   = body.replace(/@j-(\w+)/g       , 'this.lib.jqRef(this.el).$1()')
