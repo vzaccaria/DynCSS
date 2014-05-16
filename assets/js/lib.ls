@@ -40,7 +40,7 @@ transitionToOne = (context, power = 1) ->
         | start<stop => (val - start) / (stop - start)
         | start>stop and val>start => 1
         | start>stop and val<stop  => 0
-        | start>stop => 1 - (val-stop) / (start - stop)
+        | start>stop => 1 - (val - stop) / (start - stop)
 
     vv = sat(pp)
     vv = Math.pow(vv, power)
