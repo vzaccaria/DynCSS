@@ -3,6 +3,36 @@ mixin fundesc(name, use, description)
 	.api__element__use #{use}
 	.api__element__command_desc #{description}
 
+mixin fundesc_transition_to_one
+	.api__element
+		+fundesc('@transitionToOne', '@transitionToOne({when: expr, start: val, end: val}, power)', 
+				'Returns a value that starts at 0, when `expr` is lower than `start`, and approaches 1.0, when `expr` approaches `end`.')
+
+		.api__element__returns
+			.api__element__returns__element
+				.api__element__returns__element__value 0
+				.api__element__returns__element__when`expr` is lower than `start`
+
+			.api__element__returns__element
+				.api__element__returns__element__value (expr/val)^power
+				.api__element__returns__element__when`expr` is higher than `start` but lower than `end`
+
+			.api__element__returns__element
+				.api__element__returns__element__value 1
+				.api__element__returns__element__when`expr` is higher `end`
+
+		.api__element_example 
+			:markdown
+				This snippet turns down opacity when scrolling position (`@win-scrollTop`) is
+				reaching 400px. The transition follows an sqrt law (`power`=.5)
+
+				```css
+				.header {
+					-dyn-opacity: '1-@transitionToOne({when : @win-scrollTop , start: 0, stop: 400 }, .5)';
+				}
+				```
+	.api__hr
+
 mixin fundesc_should_appear
 	.api__element
 		+fundesc('@shouldAppear', '@shouldAppear({when: expr, isHigherThan: val})', 
@@ -92,6 +122,36 @@ mixin fundesc_select_from
 				```	
 				
 				sets two breakpoints at window's width (`@win-width`) equal to 320 and 480 pixels.
+
+mixin fundesc_if
+	.api__element 
+		+fundesc('@if', '@if(condition, v1, v2)', 'Returns v1 if condition is true, v2 otherwise.')
+
+		.api__element_example 
+			:markdown
+				Here, we remove the element when scroll-top is higher than its bottom.
+
+				```css 
+				.element-to-be-removed {
+					-dyn-display: '@if(@win-scrollTop > @jq-offset.bottom, "none", "block")';
+				}
+				```
+
+mixin fundesc_morph
+	.api__element 
+		+fundesc('@morph', '@morph(factor, v1, v2)', 'Returns the convex combination (1-factor)*v1 + factor*v2.')
+
+		.api__element_example 
+			:markdown
+				`factor` can be the state of a transition. This snippet resizes the width of `.element` by using the state 
+				returned by `@transitionToOne`. 
+
+				```css 
+				.element {
+					-dyn-width: '@morph(transitionToOne(...), 200, 300)';
+				}
+				```
+
 
 doctype html
 html
@@ -241,6 +301,28 @@ html
 							-dyn-margin-left: '@center().x';
 						```
 
+						## Virtual properties - new 
+
+						To enable more precise positioning of elements, the following dynamic properties
+						of position=fixed elements have been introduced:
+
+						| property name | affects |
+						| ------------- | --------| 
+						| -dyn-fixed-vertical-center | top | 
+						| -dyn-fixed-horizontal-center | left |
+
+						They take implicitly into account the size of the element in order to center it 
+						horizontally; for example:
+
+						```css
+						.element {
+							position: fixed;
+							-dyn-fixed-vertical-center: '@fixedVerticalCenter(".element2")';
+						}
+						```
+						will vertically align `.element` to `.element2` (another fixed element).
+
+
 				#responsiveness.sub-header__container__short_desc
 					:markdown
 
@@ -325,6 +407,9 @@ html
 						+fundesc_should_appear()
 						+fundesc_should_disappear()
 						+fundesc_select_from()
+						+fundesc_transition_to_one()
+						+fundesc_if()
+						+fundesc_morph()
 
 				
 
