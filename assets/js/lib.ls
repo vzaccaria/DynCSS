@@ -127,7 +127,7 @@ right-of = (el) ->
 _module = ->
 
           
-    iface = {
+    iface = 
         shouldDisappear     : shouldDisappear
         convergeToZero      : shouldDisappear
         shouldAppear        : shouldAppear
@@ -167,11 +167,11 @@ _module = ->
             $el-h     = $el.innerHeight!
             $w-height = $(window).height!
             $set-off  = $el-top
-            v         = shouldAppear(when: $(window).scrollTop!, is-higher-than: $set-off})
+            v         = shouldAppear(when: $(window).scrollTop!, is-higher-than: $set-off)
 
             console.log "top = #{$w-top}, completed-at = #{$set-off}, visible = #v, eltop = #{$el-top}, el-h = #{$el-h}" if debug
             return v
-    }
+    
   
     return iface
  
