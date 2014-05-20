@@ -95,7 +95,7 @@ isVerticallyVisible = (el, threshold) ->
     return value
 
 
-# These work only on border-box type elements
+# These work only on fixed position elements
 
 top-of = (el) ->
     if el != window
