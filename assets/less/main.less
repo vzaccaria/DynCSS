@@ -53,12 +53,14 @@ code {
 //  /_/ /_/\___/\__,_/\__,_/\___/_/     
 //                                      
 
+@disappear-state: '@shouldDisappear({when: @win-scrollTop, isHigherThan: @win-height/4})';
+
 .header {
     width            : 70%;
     -dyn-transform   : '"translate( 0px , #{-1*@win-scrollTop}px) "';
     -dyn-margin-top  : '(@win-height - @el-height)/2.0';
     -dyn-margin-left : '(@win-width -  @el-width)/2.0';
-    -dyn-opacity     : '@shouldDisappear({when: @win-scrollTop, isHigherThan: @win-height/4})';
+    -dyn-opacity     : @disappear-state;
     
 }
 
