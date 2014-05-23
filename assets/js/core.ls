@@ -14,6 +14,9 @@ dyn-css = (window-di, document-di, jq-di) ->
     window-di.dynCss      = {}
     window-di.dynCss.lib  = built-in
     window-di.dynCss.data = {}
+    window-di.dynCss.config = 
+        debug: false
+        dontComputeInvisible: false
 
 
     #         __                    __               _       __      
@@ -49,7 +52,7 @@ dyn-css = (window-di, document-di, jq-di) ->
             $(window).hide().show()
     }
 
-    debug = false
+    
 
     #                           
     #       _________  ________ 
@@ -105,7 +108,7 @@ dyn-css = (window-di, document-di, jq-di) ->
         return undefined
 
     transcompile-function = (body) ->
-        console.log body if debug
+        console.log body if window-di.dynCss.config.debug
         body   = body.replace(/@a-(\w+){(.+)}/g , 'this.lib.jqRef(\'$2\').$1()')
         body   = body.replace(/\#{(.+)}/g       , '"+($1)+"')
         body   = body.replace(/@i-(\w+)/g       , 'parseInt(this.el.css(\'$1\'))')
@@ -162,7 +165,7 @@ dyn-css = (window-di, document-di, jq-di) ->
                                         else 
                                             window-di.dynCss.el.removeClass(cc)
                                     else 
-                                        console.log "Assigning #{sct}.#{a.property} <= #{a.funct()}" if debug
+                                        console.log "Assigning #{sct}.#{a.property} <= #{a.funct()}" if window-di.dynCss.config.debug
                                         css[a.property] = a.funct()
 
 
