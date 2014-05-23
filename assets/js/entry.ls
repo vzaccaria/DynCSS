@@ -12,7 +12,10 @@ dyn-css   = require('./core')
 #     /_/ /_/\__,_/_/ /_/\__,_/_/\___/_/  /____/  
 #                                                 
 
-refresh-handler = undefined
+refresh-handler = (changed) ->
+        if changed
+            window.dynCss.api.force-redraw()
+    
 decimate        = 1
 iOS             = /(iPad|iPhone|iPod)/g.test( navigator.userAgent );
 counter         = 0
@@ -48,9 +51,9 @@ install-raf-handler = ->
 
 install-scroll-handler = (options) ->
             scroll-handler = ->
-                if (counter % decimate) == 0
-                    refresh-handler()
-                counter := counter + 1
+                    if (counter % decimate) == 0
+                        refresh-handler(false)
+                    counter := counter + 1
 
             if not options?.only-on-resize?
                 window.onscroll     = scroll-handler

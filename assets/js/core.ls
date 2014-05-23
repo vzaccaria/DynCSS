@@ -38,6 +38,15 @@ dyn-css = (window-di, document-di, jq-di) ->
     window-di.dynCss.api = {
         set-breakpoints:            set-breakpoints 
         set-named-breakpoints:      set-named-breakpoints 
+
+        force-redraw: ->
+            ss = document.styleSheets[0];
+            try 
+                ss.addRule('.xxxxxx', 'position: relative'); 
+            catch
+
+        force-redraw-brute: ->
+            $(window).hide().show()
     }
 
     debug = false
@@ -140,7 +149,7 @@ dyn-css = (window-di, document-di, jq-di) ->
 
             wrapper = (next) ->
                 let act = actions, scoped-sel=sel
-                    (e) -> 
+                    (changed) -> 
                         for sct in scoped-sel
                             jq-di(sct).each (i) ->
                                 window-di.dynCss.el = jq-di(this)
@@ -156,9 +165,33 @@ dyn-css = (window-di, document-di, jq-di) ->
                                         console.log "Assigning #{sct}.#{a.property} <= #{a.funct()}" if debug
                                         css[a.property] = a.funct()
 
-                                window-di.dynCss.el.css(css)
 
-                        next(e) if next?
+                                for k,v of css 
+                                    is-initial-phase = (not this.old-value?) or (not this.old-value?[k]?)
+                                    is-changed = (this.old-value? and this.old-value[k]? and css[k] != this.old-value[k])
+                                    # is-not-hidden = (css['display']?) and not (css['display']='hidden') 
+                                    is-not-hidden = 
+                                        | not window-di.dynCss.config.dontComputeInvisible => true 
+                                        | window-di.dynCss.el.css('display') != 'none' => true 
+                                        | otherwise => false 
+                                        
+                                    is-visibility-toggled = (k == 'display')
+                                    if (is-initial-phase and is-not-hidden) or (is-changed and is-not-hidden) or (is-changed and is-visibility-toggled)
+                                        console.log "#sct - #k - #{this.old-value?[k]} - #{css[k]}" if window-di.dynCss.config.debug
+                                        window-di.dynCss.el.css({"#k": v})
+                                        this.old-value ?= {}
+                                        this.old-value[k] = v
+                                        changed := true
+
+                                new-value = JSON.stringify(css)
+
+                                # if (not this.old-value?) or new-value != this.old-value
+                                #     console.log "#sct - #{this.old-value} - #new-value"
+                                #     window-di.dynCss.el.css(css)
+                                #     this.old-value = new-value
+                                #     changed := true
+
+                        next(changed) if next?
 
             if actions.length != 0
                 refresh-handler := wrapper(refresh-handler)                
