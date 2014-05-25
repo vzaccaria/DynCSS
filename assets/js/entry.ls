@@ -2,6 +2,7 @@
 css-parse = require('css-parse')
 built-in  = require('./lib')
 dyn-css   = require('./core')
+_q         = require('q')
 
 { build-handlers } = dyn-css(window, document, jQuery)
 
@@ -70,25 +71,40 @@ install-scroll-handler = (options) ->
 #     /_/ /_/ /_/\__,_/_/_/ /_/   \___/_/ /_/\__/_/   \__, /  
 #                                                    /____/   
 
-$('link[type="text/css"]').each (i,n) ->
+entry-debug-message "Scanning for css" 
+
+parse-css = (n) ->
     entry-debug-message "Loading #{n.href}"
+    _d = _q.defer()
     if n.href?
         $.get n.href, ->
+            entry-debug-message "Loaded #{n.href}"
             rules = css-parse(it).stylesheet.rules
             refresh-handler := build-handlers(rules, refresh-handler)
             if refresh-handler?
                 if iOS
-                    install-scroll-handler({+only-on-resize})
+                    install-scroll-handler({+only-on-start})
                 else 
                     install-scroll-handler()
-            
+            _d.resolve()
+    return _d.promise
+
+_loaded_d = _q.defer()
+_loaded_p = _loaded_d.promise 
+
+window.onload = ->
     entry-debug-message "Content loaded"
+    _loaded_d.resolve()
+
+$(document).ready = ->
     entry-debug-message "Document parsed."
 
-            # window.onscroll = refresh-handler
-            # window.onresize = refresh-handler 
-            # refresh-handler()
+results = $('link[type="text/css"]')
+p-array = [ parse-css(r) for r in results ] ++ [ _loaded_p ]
+
+_q.all(p-array).then ->
     entry-debug-message "Initializing handler"
+    scroll-handler()            
 
 
 
