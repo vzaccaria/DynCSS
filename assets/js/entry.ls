@@ -33,7 +33,7 @@ lt              = 0
 fixed-ttc       = (1000/1)
 
 install-custom-raf = ->
-    window.customRAF = (cb) ->
+    window.custom-request-animation-frame = (cb) ->
         ct = new Date().getTime()
         ttc = Math.max(0, 16 - (ct - lt))
         if fixed-ttc? 
@@ -43,34 +43,25 @@ install-custom-raf = ->
 
         lt := ct + ttc
 
-install-custom-raf-handler = ->
-    install-custom-raf()
-    wrapped-handler = ->
-        customRAF wrapped-handler 
-        refresh-handler()
-
-    customRAF(wrapped-handler)
-    refresh-handler()
-
-install-raf-handler = ->
-            wrapped-handler = ->
-                request-animation-frame wrapped-handler 
-                refresh-handler()
-
-            request-animation-frame(wrapped-handler)
-
 install-scroll-handler = (options) ->
-            scroll-handler = ->
-                    if (counter % decimate) == 0
-                        refresh-handler(false)
-                    counter := counter + 1
+            scroll-handler := ->
+                    if window.dynCss.config.useRAF
+                        window.request-animation-frame ->
+                            if (counter % decimate) == 0
+                                refresh-handler(false)
+                            counter := counter + 1
+                    else 
+                            if (counter % decimate) == 0
+                                refresh-handler(false)
+                            counter := counter + 1                        
 
-            if not options?.only-on-resize?
-                window.onscroll     = scroll-handler
-                window.ontouchmove  = scroll-handler
-
-            window.onresize     = scroll-handler
-            scroll-handler()
+            if options?.only-on-resize?
+                window.onresize     = scroll-handler
+            else 
+                if not options?.only-on-start?
+                   window.onscroll     = scroll-handler
+                   window.ontouchmove  = scroll-handler
+                   window.onresize     = scroll-handler
 
 #                         _                     __            
 #        ____ ___  ____ _(_)___     ___  ____  / /________  __
