@@ -1,5 +1,17 @@
 built-in = require('./lib')
 
+blue = '#3498db'
+red = '#c0392b'
+normal = 'black'
+
+core-debug-message = (m) ->
+    if window.dynCss.config.debug
+        console.log "%cdyncss-core : %c#m", "color: #blue", "color: #normal"
+
+core-heavy-debug-message = (m) ->
+    if window.dynCss.config.debug
+        console.log "%cdyncss-core : %c#m", "color: #red", "color: #normal"
+
 dyn-css = (window-di, document-di, jq-di) ->
 
     inner-module = ->
@@ -109,7 +121,7 @@ dyn-css = (window-di, document-di, jq-di) ->
         return undefined
 
     transcompile-function = (body) ->
-        console.log body if window-di.dynCss.config.debug
+        core-debug-message body if window-di.dynCss.config.debug
         body   = body.replace(/@a-(\w+){(.+)}/g , 'this.lib.jqRef(\'$2\').$1()')
         body   = body.replace(/\#{(.+)}/g       , '"+($1)+"')
         body   = body.replace(/@i-(\w+)/g       , 'parseInt(this.el.css(\'$1\'))')
@@ -166,7 +178,7 @@ dyn-css = (window-di, document-di, jq-di) ->
                                         else 
                                             window-di.dynCss.el.removeClass(cc)
                                     else 
-                                        console.log "Assigning #{sct}.#{a.property} <= #{a.funct()}" if window-di.dynCss.config.debug
+                                        core-debug-message "Assigning to #{sct}.#{a.property} value #{a.funct()}" if window-di.dynCss.config.debug
                                         css[a.property] = a.funct()
 
 
@@ -181,19 +193,13 @@ dyn-css = (window-di, document-di, jq-di) ->
                                         
                                     is-visibility-toggled = (k == 'display')
                                     if (is-initial-phase and is-not-hidden) or (is-changed and is-not-hidden) or (is-changed and is-visibility-toggled)
-                                        console.log "#sct - #k - #{this.old-value?[k]} - #{css[k]}" if window-di.dynCss.config.debug
+                                        core-heavy-debug-message "#sct - #k transition (#{this.old-value?[k]} --> #{css[k]})" if window-di.dynCss.config.debug
                                         window-di.dynCss.el.css({"#k": v})
                                         this.old-value ?= {}
                                         this.old-value[k] = v
                                         changed := true
 
                                 new-value = JSON.stringify(css)
-
-                                # if (not this.old-value?) or new-value != this.old-value
-                                #     console.log "#sct - #{this.old-value} - #new-value"
-                                #     window-di.dynCss.el.css(css)
-                                #     this.old-value = new-value
-                                #     changed := true
 
                         next(changed) if next?
 
