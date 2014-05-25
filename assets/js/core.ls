@@ -17,6 +17,7 @@ dyn-css = (window-di, document-di, jq-di) ->
     window-di.dynCss.config = 
         debug: false
         dontComputeInvisible: false
+        useRAF: false;
 
 
     #         __                    __               _       __      
