@@ -106,5 +106,26 @@ _q.all(p-array).then ->
     entry-debug-message "Initializing handler"
     scroll-handler()            
 
+window.dynCss.api.initVariable = (vr, value) ->
+    window.dynCss.lib[vr] = value
 
+window.dynCss.api.setVariable = (vr, value) ->
+    window.dynCss.api.initVariable vr, value 
+    scroll-handler()
 
+window.dynCss.api.initToggle = (vr, value1, value2) ->
+    window.dynCss.api.initVariable vr, value1 
+    window.dynCss.api.initVariable vr+"Value0", value1 
+    window.dynCss.api.initVariable vr+"Value1", value2 
+    entry-debug-message "Initialising variable #vr to #value1"
+
+window.dynCss.api.toggle = (vr) ->
+    vv = window.dynCss.lib[vr]
+    v1 = window.dynCss.lib[vr+"Value0"]
+    v2 = window.dynCss.lib[vr+"Value1"]
+    if vv == v1 
+        window.dynCss.api.setVariable vr, v2
+        entry-debug-message "Setting #vr to #v2"
+    else 
+        window.dynCss.api.setVariable vr, v1
+        entry-debug-message "Setting #vr to #v1"
