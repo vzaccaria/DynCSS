@@ -12,6 +12,16 @@ dyn-css   = require('./core')
 #     /_/ /_/\__,_/_/ /_/\__,_/_/\___/_/  /____/  
 #                                                 
 
+blue = '#3498db'
+red = '#c0392b'
+normal = 'black'
+
+entry-debug-message = (m) ->
+    if window.dynCss.config.debug
+        console.log "%cdyncss-entry: %c#m", "color: #blue", "color: #normal"
+
+var scroll-handler 
+
 refresh-handler = (changed) ->
         if changed
             window.dynCss.api.force-redraw()
@@ -70,6 +80,7 @@ install-scroll-handler = (options) ->
 #                                                    /____/   
 
 $('link[type="text/css"]').each (i,n) ->
+    entry-debug-message "Loading #{n.href}"
     if n.href?
         $.get n.href, ->
             rules = css-parse(it).stylesheet.rules
@@ -80,10 +91,13 @@ $('link[type="text/css"]').each (i,n) ->
                 else 
                     install-scroll-handler()
             
+    entry-debug-message "Content loaded"
+    entry-debug-message "Document parsed."
 
             # window.onscroll = refresh-handler
             # window.onresize = refresh-handler 
             # refresh-handler()
+    entry-debug-message "Initializing handler"
 
 
 
